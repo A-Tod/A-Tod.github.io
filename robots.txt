@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://atodstudio.com/sitemap.xml
