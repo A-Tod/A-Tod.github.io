@@ -267,4 +267,19 @@
     cta.addEventListener('click', () => { if (labelEl) labelEl.textContent = 'נוסף להזמנה'; });
     paint();
   }
+
+  /* ---------- model-viewer ---------- */
+  /* loading="lazy" המובנה של model-viewer לא נדלק בחלק מהדפדפנים, והמודל
+     פשוט לא נטען לעולם. מאומת בייצור. מחליפים ל-eager כשהבלוק מתקרב למסך —
+     אותה התנהגות עצלה בדיוק, רק אמינה. */
+  (() => {
+    const mv = document.querySelector('model-viewer[loading="lazy"]');
+    if (!mv) return;
+    const go = () => mv.setAttribute('loading', 'eager');
+    if (!('IntersectionObserver' in window)) return go();
+    const io = new IntersectionObserver(es => {
+      if (es.some(e => e.isIntersecting)) { go(); io.disconnect(); }
+    }, { rootMargin: '800px 0px' });
+    io.observe(mv);
+  })();
 })();
