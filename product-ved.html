@@ -20,8 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;700&family=Assistant:wght@200;300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v33">
+<link rel="stylesheet" href="assets/css/style.css?v34">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Ved", "sku": "ATD-VE-90", "description": "מנורת התקרה Ved מעניקה הארה רכה ונעימה לאזורים כמו שולחנות לילה ומפיצה אור בצורה עדינה שיוצרת אווירה שלווה ומזמינה. צורתה הקומפקטית משתלבת בטבעיות בעיצובים מודרניים ומינימליסטיים. מנורת תקרה זו מוסיפה אלגנטיות שקטה ותחושת חמימות לחללים אינטימיים.", "image": ["assets/img/177757_59c6c9a2e8c148779e94d47d0e948d7c.jpg", "assets/img/177757_b97966afb1484c22bfc08e2f528990aaf002.jpg", "assets/img/177757_503969f40bbb4601934db100d4aade77.jpg", "assets/img/177757_3b0337445bd1457c9beb1c568839a63f.jpg"], "brand": {"@type": "Brand", "name": "a-tod"}, "offers": {"@type": "Offer", "price": 750, "priceCurrency": "ILS", "availability": "https://schema.org/InStock"}}</script>
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">דילוג לתוכן הראשי</a>
@@ -99,14 +100,14 @@
       <div class="pdp__stage">
         <img src="assets/img/177757_59c6c9a2e8c148779e94d47d0e948d7c.jpg" alt="Ved — גוף תאורה מבטון" width="900" height="900" fetchpriority="high">
         <div class="dims" data-dims aria-hidden="true">
-          <i style="left:18.0%;right:18.0%;bottom:12.0%;height:1px"></i>
-          <i style="left:18.0%;bottom:11.4%;width:1px;height:12px"></i>
-          <i style="right:18.0%;bottom:11.4%;width:1px;height:12px"></i>
-          <b style="bottom:7.4%;left:0;right:0;text-align:center">⌀ 90 MM</b>
-          <i style="right:11.5%;top:18.0%;bottom:18.0%;width:1px"></i>
-          <i style="right:10.0%;top:18.0%;width:20px;height:1px"></i>
-          <i style="right:10.0%;bottom:18.0%;width:20px;height:1px"></i>
-          <b style="right:2.5%;top:50%;transform:rotate(-90deg);transform-origin:right center;white-space:nowrap">H 120 MM</b>
+          <i style="left:32.9%;right:33.6%;bottom:29.6%;height:1px"></i>
+          <i style="left:32.9%;bottom:29.0%;width:1px;height:12px"></i>
+          <i style="right:33.6%;bottom:29.0%;width:1px;height:12px"></i>
+          <b style="bottom:25.0%;left:0;right:0;text-align:center">⌀ 90 MM</b>
+          <i style="right:26.4%;top:36.4%;bottom:35.6%;width:1px"></i>
+          <i style="right:24.9%;top:36.4%;width:20px;height:1px"></i>
+          <i style="right:24.9%;bottom:35.6%;width:20px;height:1px"></i>
+          <b style="right:17.4%;top:50%;transform:rotate(-90deg);transform-origin:right center;white-space:nowrap">H 120 MM</b>
         </div>
         <button class="dimbtn" data-dimbtn aria-pressed="false">מידות</button>
       </div>
@@ -143,6 +144,33 @@
     </div>
   </div>
 
+
+  <div class="m3d">
+    <div class="wrap m3d__grid">
+      <div class="m3d__side">
+        <div class="m3d__eyebrow">מודל תלת־מימד</div>
+        <p class="m3d__lead">סובבו את הדגם, קרבו והתרחקו. בטלפון אפשר גם להציב אותו בחלל האמיתי שלכם, בגודל מדויק.</p>
+        <div class="m3d__facts">
+          <div class="drow"><span>קוטר</span><span class="num">90 מ&quot;מ</span></div>
+          <div class="drow"><span>גובה</span><span class="num">120 מ&quot;מ</span></div>
+        </div>
+        
+      </div>
+      <model-viewer class="m3d__view"
+        src="assets/3d/ved.glb"
+        alt="Ved — מודל תלת־ממדי"
+        poster="assets/img/177757_59c6c9a2e8c148779e94d47d0e948d7c.jpg"
+        camera-controls auto-rotate rotation-per-second="18deg"
+        min-camera-orbit="auto auto 30%" max-camera-orbit="auto auto 350%"
+        min-field-of-view="12deg" max-field-of-view="55deg"
+        ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
+        shadow-intensity="1" shadow-softness="1"
+        environment-image="neutral" exposure="1" tone-mapping="neutral"
+        interaction-prompt="none" loading="lazy">
+        <button slot="ar-button" class="m3d__ar">ראו בחלל שלכם</button>
+      </model-viewer>
+    </div>
+  </div>
 
   <div class="wrap">
     <header class="pagehead"><h2>דגמים נוספים</h2></header>
@@ -218,7 +246,7 @@
     <div class="colophon">
       <span>© 2026 a-tod · כל הזכויות שמורות</span>
       <span>עיצוב וייצור בישראל</span>
-      <span style="opacity:.55" title="מזהה בנייה — לאימות שאתם רואים את הגרסה העדכנית">בנייה v33</span>
+      <span style="opacity:.55" title="מזהה בנייה — לאימות שאתם רואים את הגרסה העדכנית">בנייה v34</span>
     </div>
   </div>
 </footer>
@@ -240,6 +268,6 @@
     <p class="form-note" style="text-align:center">כרגע ההזמנה מסתיימת בפנייה אלינו. סליקה מקוונת בהקמה.</p>
   </div>
 </aside>
-<script src="assets/js/main.js?v33"></script>
+<script src="assets/js/main.js?v34"></script>
 </body>
 </html>

@@ -20,8 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;700&family=Assistant:wght@200;300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v33">
+<link rel="stylesheet" href="assets/css/style.css?v34">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Opi", "sku": "ATD-OP-110", "description": "מנורת הקיר Opi מעניקה הארה רכה ונעימה לאזורים אינטימיים, כמו צדי המיטה או פינות קריאה. המנורה מפיצה אור דו-כיווני בצורה עדינה, היוצרת משחקי אור וצל על הקיר ואווירה שלווה ומזמינה. העיצוב המעוגל והחומר הגולמי משתלבים בטבעיות בחללים מודרניים ומינימליסטיים, ומוסיפים אלגנטיות שקטה ותחושת חמימות גולמית לבית.", "image": ["assets/img/177757_cecb6b911b7f44be874dc850f2756866.jpg", "assets/img/177757_abcd423a2b724acb89d3262f4737a2f2.jpg", "assets/img/177757_174394eb3bba4e18acd8555796204903.jpg", "assets/img/177757_4a7ddf88a7884bd68ca6ce3bfdb2e68a.jpg", "assets/img/177757_b08ae0c2f4e645b4858ac8277782b1bf.jpg"], "brand": {"@type": "Brand", "name": "a-tod"}, "offers": {"@type": "Offer", "price": 850, "priceCurrency": "ILS", "availability": "https://schema.org/InStock"}}</script>
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">דילוג לתוכן הראשי</a>
@@ -99,14 +100,14 @@
       <div class="pdp__stage">
         <img src="assets/img/177757_cecb6b911b7f44be874dc850f2756866.jpg" alt="Opi — גוף תאורה מבטון" width="900" height="900" fetchpriority="high">
         <div class="dims" data-dims aria-hidden="true">
-          <i style="left:18.0%;right:18.0%;bottom:12.0%;height:1px"></i>
-          <i style="left:18.0%;bottom:11.4%;width:1px;height:12px"></i>
-          <i style="right:18.0%;bottom:11.4%;width:1px;height:12px"></i>
-          <b style="bottom:7.4%;left:0;right:0;text-align:center">⌀ 110 MM</b>
-          <i style="right:11.5%;top:18.0%;bottom:18.0%;width:1px"></i>
-          <i style="right:10.0%;top:18.0%;width:20px;height:1px"></i>
-          <i style="right:10.0%;bottom:18.0%;width:20px;height:1px"></i>
-          <b style="right:2.5%;top:50%;transform:rotate(-90deg);transform-origin:right center;white-space:nowrap">H 90 MM</b>
+          <i style="left:29.8%;right:15.3%;bottom:27.5%;height:1px"></i>
+          <i style="left:29.8%;bottom:26.9%;width:1px;height:12px"></i>
+          <i style="right:15.3%;bottom:26.9%;width:1px;height:12px"></i>
+          <b style="bottom:22.9%;left:0;right:0;text-align:center">⌀ 110 MM</b>
+          <i style="right:8.8%;top:41.0%;bottom:33.5%;width:1px"></i>
+          <i style="right:7.3%;top:41.0%;width:20px;height:1px"></i>
+          <i style="right:7.3%;bottom:33.5%;width:20px;height:1px"></i>
+          <b style="right:1.0%;top:50%;transform:rotate(-90deg);transform-origin:right center;white-space:nowrap">H 90 MM</b>
         </div>
         <button class="dimbtn" data-dimbtn aria-pressed="false">מידות</button>
       </div>
@@ -144,6 +145,33 @@
     </div>
   </div>
 
+
+  <div class="m3d">
+    <div class="wrap m3d__grid">
+      <div class="m3d__side">
+        <div class="m3d__eyebrow">מודל תלת־מימד</div>
+        <p class="m3d__lead">סובבו את הדגם, קרבו והתרחקו. בטלפון אפשר גם להציב אותו בחלל האמיתי שלכם, בגודל מדויק.</p>
+        <div class="m3d__facts">
+          <div class="drow"><span>קוטר</span><span class="num">110 מ&quot;מ</span></div>
+          <div class="drow"><span>גובה</span><span class="num">90 מ&quot;מ</span></div>
+        </div>
+        
+      </div>
+      <model-viewer class="m3d__view"
+        src="assets/3d/opi.glb"
+        alt="Opi — מודל תלת־ממדי"
+        poster="assets/img/177757_cecb6b911b7f44be874dc850f2756866.jpg"
+        camera-controls auto-rotate rotation-per-second="18deg"
+        min-camera-orbit="auto auto 30%" max-camera-orbit="auto auto 350%"
+        min-field-of-view="12deg" max-field-of-view="55deg"
+        ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
+        shadow-intensity="1" shadow-softness="1"
+        environment-image="neutral" exposure="1" tone-mapping="neutral"
+        interaction-prompt="none" loading="lazy">
+        <button slot="ar-button" class="m3d__ar">ראו בחלל שלכם</button>
+      </model-viewer>
+    </div>
+  </div>
 
   <div class="wrap">
     <header class="pagehead"><h2>דגמים נוספים</h2></header>
@@ -205,7 +233,7 @@
     <div class="colophon">
       <span>© 2026 a-tod · כל הזכויות שמורות</span>
       <span>עיצוב וייצור בישראל</span>
-      <span style="opacity:.55" title="מזהה בנייה — לאימות שאתם רואים את הגרסה העדכנית">בנייה v33</span>
+      <span style="opacity:.55" title="מזהה בנייה — לאימות שאתם רואים את הגרסה העדכנית">בנייה v34</span>
     </div>
   </div>
 </footer>
@@ -227,6 +255,6 @@
     <p class="form-note" style="text-align:center">כרגע ההזמנה מסתיימת בפנייה אלינו. סליקה מקוונת בהקמה.</p>
   </div>
 </aside>
-<script src="assets/js/main.js?v33"></script>
+<script src="assets/js/main.js?v34"></script>
 </body>
 </html>

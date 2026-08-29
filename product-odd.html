@@ -20,8 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;700&family=Assistant:wght@200;300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v33">
+<link rel="stylesheet" href="assets/css/style.css?v34">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Odd", "sku": "ATD-OD-150", "description": "Odd היא מנורת תקרה תלויה המפיצה אור רך ואחיד המתפזר בנוחות ברחבי החלל. העיצוב הרחב שלה הופך אותה למתאימה במיוחד להצבה מעל איי מטבח, מזנונים או אזורי אוכל. האור שהיא יוצרת חמים ומזמין, ותורם לאווירה נעימה ברגעים של היומיום. צורתה הנקייה משתלבת בטבעיות בעיצובים מודרניים ומינימליסטיים. מנורה זו מביאה שילוב של פונקציונליות ויופי רגוע לכל חלל שבו היא תלויה.", "image": ["assets/img/177757_6105df109fbd4f30a6fe41c08f76aa82.jpg", "assets/img/177757_8b68a568b1e6436cbe9fda6d7d119d0c.jpg"], "brand": {"@type": "Brand", "name": "a-tod"}, "offers": {"@type": "Offer", "price": 950, "priceCurrency": "ILS", "availability": "https://schema.org/InStock"}}</script>
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">דילוג לתוכן הראשי</a>
@@ -100,14 +101,14 @@
       <div class="pdp__stage">
         <img src="assets/img/177757_6105df109fbd4f30a6fe41c08f76aa82.jpg" alt="Odd — גוף תאורה מבטון" width="900" height="900" fetchpriority="high">
         <div class="dims" data-dims aria-hidden="true">
-          <i style="left:18.0%;right:18.0%;bottom:12.0%;height:1px"></i>
-          <i style="left:18.0%;bottom:11.4%;width:1px;height:12px"></i>
-          <i style="right:18.0%;bottom:11.4%;width:1px;height:12px"></i>
-          <b style="bottom:7.4%;left:0;right:0;text-align:center">⌀ 150 MM</b>
-          <i style="right:11.5%;top:18.0%;bottom:18.0%;width:1px"></i>
-          <i style="right:10.0%;top:18.0%;width:20px;height:1px"></i>
-          <i style="right:10.0%;bottom:18.0%;width:20px;height:1px"></i>
-          <b style="right:2.5%;top:50%;transform:rotate(-90deg);transform-origin:right center;white-space:nowrap">H 160 MM</b>
+          <i style="left:24.8%;right:24.3%;bottom:23.8%;height:1px"></i>
+          <i style="left:24.8%;bottom:23.2%;width:1px;height:12px"></i>
+          <i style="right:24.3%;bottom:23.2%;width:1px;height:12px"></i>
+          <b style="bottom:19.2%;left:0;right:0;text-align:center">⌀ 150 MM</b>
+          <i style="right:17.8%;top:33.4%;bottom:29.8%;width:1px"></i>
+          <i style="right:16.3%;top:33.4%;width:20px;height:1px"></i>
+          <i style="right:16.3%;bottom:29.8%;width:20px;height:1px"></i>
+          <b style="right:8.8%;top:50%;transform:rotate(-90deg);transform-origin:right center;white-space:nowrap">H 160 MM</b>
         </div>
         <button class="dimbtn" data-dimbtn aria-pressed="false">מידות</button>
       </div>
@@ -142,6 +143,33 @@
     </div>
   </div>
 
+
+  <div class="m3d">
+    <div class="wrap m3d__grid">
+      <div class="m3d__side">
+        <div class="m3d__eyebrow">מודל תלת־מימד</div>
+        <p class="m3d__lead">סובבו את הדגם, קרבו והתרחקו. בטלפון אפשר גם להציב אותו בחלל האמיתי שלכם, בגודל מדויק.</p>
+        <div class="m3d__facts">
+          <div class="drow"><span>קוטר</span><span class="num">150 מ&quot;מ</span></div>
+          <div class="drow"><span>גובה</span><span class="num">160 מ&quot;מ</span></div>
+        </div>
+        
+      </div>
+      <model-viewer class="m3d__view"
+        src="assets/3d/odd.glb"
+        alt="Odd — מודל תלת־ממדי"
+        poster="assets/img/177757_6105df109fbd4f30a6fe41c08f76aa82.jpg"
+        camera-controls auto-rotate rotation-per-second="18deg"
+        min-camera-orbit="auto auto 30%" max-camera-orbit="auto auto 350%"
+        min-field-of-view="12deg" max-field-of-view="55deg"
+        ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
+        shadow-intensity="1" shadow-softness="1"
+        environment-image="neutral" exposure="1" tone-mapping="neutral"
+        interaction-prompt="none" loading="lazy">
+        <button slot="ar-button" class="m3d__ar">ראו בחלל שלכם</button>
+      </model-viewer>
+    </div>
+  </div>
 
   <div class="wrap">
     <header class="pagehead"><h2>דגמים נוספים</h2></header>
@@ -203,7 +231,7 @@
     <div class="colophon">
       <span>© 2026 a-tod · כל הזכויות שמורות</span>
       <span>עיצוב וייצור בישראל</span>
-      <span style="opacity:.55" title="מזהה בנייה — לאימות שאתם רואים את הגרסה העדכנית">בנייה v33</span>
+      <span style="opacity:.55" title="מזהה בנייה — לאימות שאתם רואים את הגרסה העדכנית">בנייה v34</span>
     </div>
   </div>
 </footer>
@@ -225,6 +253,6 @@
     <p class="form-note" style="text-align:center">כרגע ההזמנה מסתיימת בפנייה אלינו. סליקה מקוונת בהקמה.</p>
   </div>
 </aside>
-<script src="assets/js/main.js?v33"></script>
+<script src="assets/js/main.js?v34"></script>
 </body>
 </html>
