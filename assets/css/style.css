@@ -630,8 +630,10 @@ ul{padding:0;list-style:none}
    ========================================================================== */
 .legal{max-width:76ch;margin-inline:auto;padding-block:10px 96px}
 /* קו מפריד דק בין פסקת הפתיחה לגוף העמוד. ברוחב התוכן, לא ברוחב הטקסט. */
-.legal--intro{padding-bottom:clamp(30px,4.5vw,52px)}
-.rule{border:0;height:1px;background:var(--hairline);margin:0 0 clamp(44px,6.5vw,84px)}
+.legal--intro{padding-bottom:clamp(20px,2.6vw,30px)}
+.rule{border:0;height:1px;background:var(--hairline);margin:0 0 clamp(28px,3.8vw,48px)}
+/* פסקת הפתיחה יושבת קרוב לכותרת — בלי ריווח הסקשן המלא של 70px. */
+.story--intro{padding-top:8px;padding-bottom:0}
 .legal h2{
   font-family:var(--f-he);font-weight:400;font-size:21px;line-height:1.4;
   margin:38px 0 12px;
