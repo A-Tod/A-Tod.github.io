@@ -142,6 +142,8 @@
     shots = $$('.masonry img').map(i => ({ full: i.dataset.full || i.src, alt: i.alt }));
     $$('.masonry figure').forEach((f, i) => {
       f.tabIndex = 0; f.setAttribute('role', 'button');
+      // שם נגיש מפורש לכל תמונה, כדי שקורא מסך יבחין ביניהן (WCAG 4.1.2).
+      f.setAttribute('aria-label', `הגדלת תמונה ${i + 1} מתוך ${shots.length}`);
       f.addEventListener('click', () => openLightbox(i));
       f.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i); } });
     });
@@ -282,4 +284,67 @@
     }, { rootMargin: '800px 0px' });
     io.observe(mv);
   })();
+})();
+
+/* ---------- כלי נגישות ----------
+   מצב המשתמש נשמר ב-localStorage של הדפדפן שלו בלבד.
+   אין כאן שום קריאת רשת ושום מעקב. */
+(function () {
+  const root = document.querySelector('[data-a11y]');
+  if (!root) return;
+
+  const fab   = root.querySelector('.a11y__fab');
+  const panel = root.querySelector('.a11y__panel');
+  const close = root.querySelector('.a11y__x');
+  const KEY   = 'atod_a11y_v1';
+  const FLAGS = ['contrast', 'links', 'motion'];
+
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
+  const save = s => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch {} };
+
+  let state = load();
+
+  function apply() {
+    const b = document.body;
+    const z = +state.zoom || 1;
+    if (z !== 1) { b.dataset.a11yZoom = String(z); b.style.setProperty('--a11y-zoom', z); }
+    else { delete b.dataset.a11yZoom; b.style.removeProperty('--a11y-zoom'); }
+
+    FLAGS.forEach(f => {
+      const on = !!state[f];
+      const attr = 'a11y' + f[0].toUpperCase() + f.slice(1);
+      if (on) b.dataset[attr] = 'true'; else delete b.dataset[attr];
+      const btn = root.querySelector(`[data-flag="${f}"]`);
+      if (btn) btn.setAttribute('aria-pressed', String(on));
+    });
+
+    root.querySelectorAll('[data-zoom]').forEach(btn =>
+      btn.setAttribute('aria-pressed', String(+btn.dataset.zoom === z)));
+
+    // עצירת אנימציות עוצרת גם את מצגת הגיבור ואת סיבוב מודל התלת־מימד
+    document.querySelectorAll('model-viewer[auto-rotate]').forEach(m => {
+      if (state.motion) m.removeAttribute('auto-rotate'); });
+    save(state);
+  }
+
+  function open()  { panel.hidden = false; fab.setAttribute('aria-expanded', 'true');  close.focus(); }
+  function shut()  { panel.hidden = true;  fab.setAttribute('aria-expanded', 'false'); fab.focus(); }
+
+  fab.addEventListener('click', () => (panel.hidden ? open() : shut()));
+  close.addEventListener('click', shut);
+
+  root.querySelectorAll('[data-zoom]').forEach(btn =>
+    btn.addEventListener('click', () => { state.zoom = +btn.dataset.zoom; apply(); }));
+
+  root.querySelectorAll('[data-flag]').forEach(btn =>
+    btn.addEventListener('click', () => { const f = btn.dataset.flag; state[f] = !state[f]; apply(); }));
+
+  root.querySelector('.a11y__reset').addEventListener('click', () => { state = {}; apply(); });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) shut(); });
+  document.addEventListener('click', e => {
+    if (!panel.hidden && !root.contains(e.target)) shut();
+  });
+
+  apply();
 })();
