@@ -359,6 +359,9 @@ ul{padding:0;list-style:none}
     /* justify-self:center מכלל הדסקטופ גורם לאלמנט ה-fixed להצטמצם לרוחב
        התוכן (166px) ולהתמרכז, במקום להימתח על כל הרוחב. */
     justify-self:stretch;z-index:1;
+    /* התפריט יורש direction:ltr מ-header__inner, ולכן פריטי הניווט
+       נצמדו לשמאל. בעברית הם צריכים להיות מימין. */
+    direction:rtl;text-align:right;
     background:var(--white);border-bottom:1px solid var(--hairline);
     flex-direction:column;align-items:stretch;gap:0;
     padding:calc(var(--header-h-m) + 14px) var(--gutter) 26px;
