@@ -200,7 +200,7 @@ ul{padding:0;list-style:none}
 .feature:hover img{transform:scale(1.045)}
 .feature::after{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(0,0,0,.34) 0%,rgba(0,0,0,.06) 42%,rgba(0,0,0,.22) 100%);
+  background:linear-gradient(180deg,rgba(0,0,0,.58) 0%,rgba(0,0,0,.34) 22%,rgba(0,0,0,.06) 50%,rgba(0,0,0,.22) 100%);
 }
 .feature__label{
   position:absolute;top:16px;right:26px;z-index:1;direction:rtl;
@@ -303,7 +303,7 @@ ul{padding:0;list-style:none}
   padding:12px 16px;
   font-family:var(--f-he);font-weight:200;font-size:16px;color:var(--ink);
 }
-.news__input::placeholder{color:rgba(46,37,31,.55)}
+.news__input::placeholder{color:rgba(46,37,31,.68)}
 .news__input:focus{outline:none;border-color:var(--ink-warm)}
 .news__btn{
   flex:none;padding:12px 30px;background:var(--ink);color:var(--white);
@@ -392,12 +392,21 @@ ul{padding:0;list-style:none}
   .hero__inner{max-width:none}
   .hero__title{font-size:24px}
   .hero__sub{font-size:19px}
+  /* במובייל הכיתוב יושב בתחתית, מעל זוהר הנורה. ההצללה האלכסונית של
+     הדסקטופ לא מכסה אותו — נמדדה ניגודיות 1.08:1 על 20% משטח הכיתוב. */
+  .hero__media::after{
+    background:linear-gradient(to top,rgba(0,0,0,.74) 0%,rgba(0,0,0,.46) 24%,rgba(0,0,0,.14) 52%,transparent 76%);
+  }
 
   .features{padding-block:56px}
   .features__grid{grid-template-columns:1fr;grid-template-rows:auto;grid-template-areas:'gallery' 'collection' 'studio'}
   .feature--gallery,.feature--collection{aspect-ratio:3/2}
   .feature--studio{aspect-ratio:4/5}
   .feature__label{font-size:30px;top:12px;inset-inline-end:18px}
+  /* התווית קרובה יותר לקצה העליון מאשר בדסקטופ, ומעל האזור הבהיר של התמונה. */
+  .feature::after{
+    background:linear-gradient(180deg,rgba(0,0,0,.74) 0%,rgba(0,0,0,.46) 24%,rgba(0,0,0,.08) 54%,rgba(0,0,0,.22) 100%);
+  }
 
   .story{padding-block:44px}
   .story__grid,.story--flip .story__grid{grid-template-columns:1fr}
@@ -427,7 +436,7 @@ ul{padding:0;list-style:none}
 }
 .crumbs{
   font-family:var(--f-he);font-weight:200;font-size:14px;
-  padding-block:18px 0;color:rgba(0,0,0,.55);
+  padding-block:18px 0;color:rgba(0,0,0,.62);
 }
 .crumbs a:hover{color:var(--ink)}
 .crumbs span{margin-inline:6px}
@@ -477,7 +486,7 @@ ul{padding:0;list-style:none}
   gap:clamp(24px,3vw,44px);align-items:start;padding-block:22px 0;
 }
 .pdp__info{position:sticky;top:calc(var(--header-h) + 20px)}
-.pdp__eyebrow{font-size:14px;letter-spacing:.12em;color:rgba(46,37,31,.55)}
+.pdp__eyebrow{font-size:14px;letter-spacing:.12em;color:rgba(46,37,31,.68)}
 .pdp__name{
   font-family:var(--f-lat);font-weight:200;font-size:clamp(38px,4.4vw,52px);
   line-height:1;letter-spacing:-.01em;margin-top:14px;
@@ -531,7 +540,7 @@ ul{padding:0;list-style:none}
 .pdp__cta:hover{opacity:.88}
 .pdp__meta{
   display:flex;justify-content:space-between;margin-top:14px;
-  font-size:11.5px;letter-spacing:.1em;color:rgba(46,37,31,.5);
+  font-size:11.5px;letter-spacing:.1em;color:rgba(46,37,31,.68);
 }
 .pdp__meta .num{font-family:var(--f-lat)}
 
@@ -558,15 +567,15 @@ ul{padding:0;list-style:none}
 /* פירוט בתחתית */
 .detail{margin-top:clamp(56px,9vw,110px);border-top:1px solid var(--hairline)}
 .detail__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(30px,4.4vw,64px);padding-block:56px 96px}
-.detail h2{font-size:11.5px;letter-spacing:.16em;color:rgba(46,37,31,.5);font-weight:400;padding-bottom:16px}
+.detail h2{font-size:11.5px;letter-spacing:.16em;color:rgba(46,37,31,.68);font-weight:400;padding-bottom:16px}
 .drow{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(46,37,31,.09);font-size:14.5px}
-.drow span:first-child{color:rgba(46,37,31,.55)}
+.drow span:first-child{color:rgba(46,37,31,.68)}
 .drow .num{font-family:var(--f-lat);font-weight:300;letter-spacing:.02em}
 .detail p{font-family:var(--f-he);font-weight:200;font-size:14.5px;line-height:1.95;color:rgba(46,37,31,.86)}
 .detail p+p{margin-top:12px}
-.detail__note{margin-top:18px!important;font-size:13px!important;color:rgba(46,37,31,.6)!important;line-height:1.85!important}
+.detail__note{margin-top:18px!important;font-size:13px!important;color:rgba(46,37,31,.68)!important;line-height:1.85!important}
 .detail__note a{text-decoration:underline}
-.detail__link{font-size:13px;color:rgba(46,37,31,.62);margin-top:18px;display:inline-block;border-bottom:1px solid rgba(46,37,31,.25);padding-bottom:2px}
+.detail__link{font-size:13px;color:rgba(46,37,31,.68);margin-top:18px;display:inline-block;border-bottom:1px solid rgba(46,37,31,.45);padding-bottom:2px}
 
 /* ==========================================================================
    Gallery (masonry)
@@ -628,7 +637,7 @@ ul{padding:0;list-style:none}
 .info-list{display:grid;gap:22px}
 .info-item{display:flex;gap:14px;align-items:flex-start}
 .info-item svg{width:21px;height:21px;flex:none;margin-top:3px;stroke:var(--ink);fill:none;stroke-width:1.4}
-.info-item h3{font-family:var(--f-he);font-weight:400;font-size:16px;margin-bottom:3px}
+.info-item h3,.info-item__h{font-family:var(--f-he);font-weight:400;font-size:16px;margin-bottom:3px}
 .info-item p,.info-item a{font-family:var(--f-he);font-weight:200;font-size:17px;line-height:1.5}
 .info-item a:hover{text-decoration:underline}
 
@@ -721,13 +730,13 @@ ul{padding:0;list-style:none}
   display:grid;grid-template-columns:340px minmax(0,1fr);
   gap:clamp(28px,4vw,64px);align-items:center;padding-block:clamp(40px,5vw,72px);
 }
-.m3d__eyebrow{font-size:11.5px;letter-spacing:.16em;color:rgba(46,37,31,.5)}
+.m3d__eyebrow{font-size:11.5px;letter-spacing:.16em;color:rgba(46,37,31,.68)}
 .m3d__lead{
   font-family:var(--f-he);font-weight:200;font-size:15px;line-height:1.9;
   color:rgba(46,37,31,.86);margin-top:16px;
 }
 .m3d__facts{margin-top:26px;border-top:1px solid rgba(46,37,31,.14)}
-.m3d__note{font-size:12.5px;line-height:1.7;color:rgba(46,37,31,.5);margin-top:18px}
+.m3d__note{font-size:12.5px;line-height:1.7;color:rgba(46,37,31,.68);margin-top:18px}
 .m3d__view{
   /* מסגרת 3:4 לגובה. הגובה מוביל, הרוחב נגזר ממנו, והמסגרת ממורכזת בעמודה. */
   height:clamp(440px,50vw,660px);width:auto;aspect-ratio:3/4;
@@ -751,4 +760,100 @@ ul{padding:0;list-style:none}
 .form-sent{
   font-family:var(--f-he);font-weight:200;font-size:14px;line-height:1.7;
   color:var(--ink-warm);margin-top:12px;
+}
+
+/* ============================================================
+   כלי נגישות
+   אינו נדרש בתקנה 35 — התקנה מחייבת עמידה בת"י 5568 עצמו.
+   נבנה בבית: אפס תלויות חיצוניות, אפס בקשות רשת, אפס מעקב.
+   ============================================================ */
+.a11y{position:fixed;inset-inline-start:16px;bottom:16px;z-index:60;direction:rtl}
+
+.a11y__fab{
+  width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;
+  background:var(--ink);color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 12px rgba(0,0,0,.28);
+  transition:transform .2s var(--ease);
+}
+.a11y__fab:hover{transform:scale(1.06)}
+.a11y__fab svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round}
+.a11y__fab svg circle{fill:currentColor;stroke:none}
+
+.a11y__panel{
+  position:absolute;bottom:60px;inset-inline-start:0;width:268px;
+  background:var(--white);border:1px solid var(--hairline);
+  box-shadow:0 8px 34px rgba(0,0,0,.16);padding:16px;
+  text-align:right;
+}
+.a11y__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.a11y__title{font-family:var(--f-he);font-weight:400;font-size:18px;margin:0}
+.a11y__x{border:0;background:none;cursor:pointer;padding:4px;line-height:0}
+.a11y__x svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:1.5;stroke-linecap:round}
+
+.a11y__lbl{font-family:var(--f-he);font-weight:200;font-size:14px;color:rgba(46,37,31,.68);margin:0 0 7px}
+.a11y__seg{display:flex;gap:6px;margin-bottom:14px}
+.a11y__seg button{
+  flex:1;padding:9px 4px;cursor:pointer;
+  font-family:var(--f-he);font-weight:200;font-size:14px;
+  background:var(--white);color:var(--ink);border:1px solid var(--hairline);
+}
+.a11y__seg button[aria-pressed="true"]{background:var(--ink);color:var(--white);border-color:var(--ink)}
+
+.a11y__tog{
+  display:block;width:100%;text-align:right;cursor:pointer;
+  padding:11px 12px;margin-bottom:6px;
+  font-family:var(--f-he);font-weight:200;font-size:15px;
+  background:var(--white);color:var(--ink);border:1px solid var(--hairline);
+}
+.a11y__tog[aria-pressed="true"]{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.a11y__tog[aria-pressed="true"]::after{content:' ✓'}
+
+.a11y__foot{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:12px;padding-top:12px;border-top:1px solid var(--hairline);
+  font-family:var(--f-he);font-weight:200;font-size:13px;
+}
+.a11y__reset{border:0;background:none;cursor:pointer;padding:0;font:inherit;color:rgba(46,37,31,.68);text-decoration:underline}
+.a11y__foot a{color:rgba(46,37,31,.68);text-decoration:underline}
+
+@media (max-width:860px){
+  .a11y{inset-inline-start:12px;bottom:12px}
+  .a11y__fab{width:44px;height:44px}
+  .a11y__panel{width:min(268px,calc(100vw - 34px))}
+}
+
+/* ---- המצבים שהמשתמש מדליק ---- */
+
+/* הגדלה: מוחלת על תוכן העמוד בלבד, כדי שכלי הנגישות עצמו לא יגדל איתו. */
+body[data-a11y-zoom] > *:not(.a11y){zoom:var(--a11y-zoom,1)}
+
+body[data-a11y-links] a:not(.btn-primary):not(.pdp__cta):not(.a11y__fab){
+  text-decoration:underline!important;text-underline-offset:2px;
+}
+
+/* ניגודיות מוגברת: מבטל את כל הטקסטים המרוככים ומחזק גבולות. */
+body[data-a11y-contrast] *{color:var(--ink)!important}
+body[data-a11y-contrast] .hero__title,
+body[data-a11y-contrast] .hero__sub,
+body[data-a11y-contrast] .feature__label,
+body[data-a11y-contrast] .m3d__ar,
+body[data-a11y-contrast] .btn-primary,
+body[data-a11y-contrast] .pdp__cta,
+body[data-a11y-contrast] .news__btn,
+body[data-a11y-contrast] .btn-send,
+body[data-a11y-contrast] .skip-link,
+body[data-a11y-contrast] .a11y__fab,
+body[data-a11y-contrast] .a11y__tog[aria-pressed="true"],
+body[data-a11y-contrast] .a11y__seg button[aria-pressed="true"]{color:var(--white)!important}
+body[data-a11y-contrast] .hero__media::after{background:rgba(0,0,0,.55)}
+body[data-a11y-contrast] .feature::after{background:rgba(0,0,0,.5)}
+body[data-a11y-contrast] :focus-visible{outline-width:3px}
+
+/* עצירת אנימציות — אותה התנהגות כמו prefers-reduced-motion */
+body[data-a11y-motion] *,
+body[data-a11y-motion] *::before,
+body[data-a11y-motion] *::after{
+  animation-duration:.001ms!important;animation-iteration-count:1!important;
+  transition-duration:.001ms!important;scroll-behavior:auto!important;
 }
