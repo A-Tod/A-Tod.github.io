@@ -165,7 +165,30 @@
   };
   const emailOk = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 
-  $('#contact-form')?.addEventListener('submit', e => {
+  /* ---------- הטפסים ----------
+     FORM = כתובת ה-endpoint שקולט את הפניות (Formspree או שווה ערך).
+     כל עוד הוא ריק, הטפסים נופלים חזרה לפתיחת הודעת מייל אצל הגולש —
+     מה שאומר שאף כתובת לא נאספת בפועל. עם endpoint, הפנייה נשלחת
+     ברקע ונשמרת, גם אם לגולש אין תוכנת מייל מוגדרת. */
+  const FORM = '';
+
+  async function post(fields, subject) {
+    if (!FORM) return false;
+    try {
+      const fd = new FormData();
+      Object.entries(fields).forEach(([k, v]) => v && fd.append(k, v));
+      fd.append('_subject', subject);
+      const r = await fetch(FORM, { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
+      return r.ok;
+    } catch { return false; }
+  }
+
+  function mailFallback(to, subject, body) {
+    location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+
+  $('#contact-form')?.addEventListener('submit', async e => {
+    e.preventDefault();
     let bad = false;
     const name = $('#f-name'), mail = $('#f-mail'), tel = $('#f-tel');
     setErr(name.closest('.field'), name.value.trim() ? '' : (bad = true, 'נא למלא שם'));
@@ -173,28 +196,47 @@
     if (tel.value.trim() && !/^[\d\-+() ]{7,}$/.test(tel.value.trim()))
       setErr(tel.closest('.field'), (bad = true, 'מספר טלפון לא תקין'));
     else setErr(tel.closest('.field'), '');
-    e.preventDefault();
     if (bad) { $('[data-error="true"] input')?.focus(); return; }
-    // אין שרת. פותחים הודעה מוכנה בתוכנת המייל של המשתמש.
-    const to = e.currentTarget.dataset.mailto;
+
+    const form = e.currentTarget;
+    const btn = form.querySelector('.btn-send');
     const msg = $('#f-msg')?.value.trim() || '';
+    const sent = document.querySelector('.form-sent');
+    if (btn) { btn.disabled = true; btn.textContent = 'שולח…'; }
+
+    const ok = await post({ שם: name.value.trim(), מייל: mail.value.trim(),
+                            טלפון: tel.value.trim(), הודעה: msg,
+                            email: mail.value.trim() }, 'פנייה מהאתר');
+    if (btn) { btn.disabled = false; btn.textContent = 'שלח'; }
+
+    if (ok) {
+      form.reset();
+      if (sent) { sent.textContent = 'הפנייה נשלחה. נחזור אליכם תוך יום עסקים אחד.'; sent.hidden = false; }
+      return;
+    }
     const body = [`שם: ${name.value.trim()}`, `מייל: ${mail.value.trim()}`,
                   tel.value.trim() ? `טלפון: ${tel.value.trim()}` : null,
                   '', msg].filter(v => v !== null).join('\n');
-    location.href = `mailto:${to}?subject=${encodeURIComponent('פנייה מהאתר')}&body=${encodeURIComponent(body)}`;
-    const sent = document.querySelector('.form-sent');
+    mailFallback(form.dataset.mailto, 'פנייה מהאתר', body);
     if (sent) sent.hidden = false;
   });
 
-  $('#news-form')?.addEventListener('submit', e => {
+  $('#news-form')?.addEventListener('submit', async e => {
     e.preventDefault();
-    const i = $('#news-mail'), m = $('.news__msg');
-    if (!emailOk(i.value.trim())) { m.textContent = 'נא להזין כתובת מייל תקינה'; m.style.color = '#7a2718'; return; }
-    // אין רשימת תפוצה מחוברת. שולחים בקשת הרשמה במייל במקום להבטיח משהו שלא קורה.
-    const to = e.currentTarget.dataset.mailto;
-    location.href = `mailto:${to}?subject=${encodeURIComponent('הרשמה לרשימת התפוצה')}` +
-                    `&body=${encodeURIComponent('אשמח להצטרף לרשימת התפוצה ולקבל את קוד ההנחה.\nכתובת המייל שלי: ' + i.value.trim())}`;
-    m.textContent = 'פתחנו לכם הודעה מוכנה. שלחו אותה ונחזור אליכם עם הקוד.'; m.style.color = '';
+    const i = $('#news-mail'), m = $('.news__msg'), form = e.currentTarget;
+    const v = i.value.trim();
+    if (!emailOk(v)) { m.textContent = 'נא להזין כתובת מייל תקינה'; m.style.color = '#7a2718'; return; }
+
+    m.style.color = ''; m.textContent = 'רושם…';
+    const ok = await post({ email: v, סוג: 'הרשמה לרשימת התפוצה' }, 'הרשמה לרשימת התפוצה · 10%');
+    if (ok) {
+      form.reset();
+      m.textContent = 'נרשמתם. קוד ההנחה יישלח אליכם למייל.';
+      return;
+    }
+    mailFallback(form.dataset.mailto, 'הרשמה לרשימת התפוצה',
+      'אשמח להצטרף לרשימת התפוצה ולקבל את קוד ההנחה.\nכתובת המייל שלי: ' + v);
+    m.textContent = 'פתחנו לכם הודעה מוכנה. שלחו אותה ונחזור אליכם עם הקוד.';
   });
 
   /* ---------- reveal on scroll ---------- */
@@ -231,10 +273,23 @@
   const stage = document.querySelector('[data-dimbtn]');
   if (stage) {
     const dims = document.querySelector('[data-dims]');
+    const shot = document.querySelector('[data-stage]');
+    // קווי המידות נמדדו על צילום הסטודיו. אם הבמה מציגה תמונה אחרת,
+    // הלחיצה מחזירה את צילום הסטודיו ואז מציירת עליו את הקווים.
+    const dimSrc  = shot && shot.dataset.dimSrc;
+    const heroSrc = shot && shot.dataset.heroSrc;
+    if (dimSrc) { const pre = new Image(); pre.src = dimSrc; }
+
     stage.addEventListener('click', () => {
       const on = stage.getAttribute('aria-pressed') === 'true';
       stage.setAttribute('aria-pressed', String(!on));
-      if (!on) dims.setAttribute('data-on', ''); else dims.removeAttribute('data-on');
+      if (!on) {
+        if (dimSrc) { shot.removeAttribute('width'); shot.removeAttribute('height'); shot.src = dimSrc; }
+        dims.setAttribute('data-on', '');
+      } else {
+        dims.removeAttribute('data-on');
+        if (heroSrc) shot.src = heroSrc;
+      }
     });
   }
 
@@ -347,4 +402,159 @@
   });
 
   apply();
+})();
+
+/* ---------- מדידה + הסכמה לעוגיות ----------
+   שני המזהים יושבים כאן, בקובץ אחד. להפעלה או לכיבוי — מעדכנים רק אותו.
+   ריק = כלום לא נטען, ואין באנר.
+   הסקריפטים נטענים אך ורק אחרי הסכמה מפורשת. */
+(function () {
+  const GA      = 'G-REPLACE';     // Google Analytics 4  (Measurement ID)
+  const CLARITY = 'REPLACE';       // Microsoft Clarity   (Project ID)
+
+  const has = v => v && !/REPLACE/.test(v);
+  const ON0 = has(GA) || has(CLARITY);
+
+  const KEY = 'atod_consent_v1';
+  const get = () => { try { return localStorage.getItem(KEY); } catch { return null; } };
+  const set = v => { try { localStorage.setItem(KEY, v); } catch {} };
+
+  /* ביקורים של רועי עצמו לא אמורים להיספר.
+     כניסה חד-פעמית ל-studioatod.com/?notrack=1 מסמנת את הדפדפן לצמיתות.
+     ביטול: ?notrack=0 */
+  const NT = 'atod_notrack';
+  try {
+    const q = new URLSearchParams(location.search).get('notrack');
+    if (q === '1') localStorage.setItem(NT, '1');
+    if (q === '0') localStorage.removeItem(NT);
+  } catch {}
+  let me = false;
+  try { me = localStorage.getItem(NT) === '1'; } catch {}
+
+  const ON = ON0 && !me;
+
+  let loaded = false;
+  const queue = [];
+
+  /* ---- שכבת האירועים ---- */
+  window.atodTrack = function (name, params) {
+    if (!ON) return;
+    if (!loaded) { queue.push([name, params]); return; }
+    try { window.gtag && window.gtag('event', name, params || {}); } catch {}
+    try { window.clarity && window.clarity('event', name); } catch {}
+  };
+
+  function loadScripts() {
+    if (loaded || !ON) return;
+    loaded = true;
+
+    if (has(GA)) {
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      gtag('js', new Date());
+      gtag('config', GA, { anonymize_ip: true });
+    }
+
+    if (has(CLARITY)) {
+      (function (c, l, a, r, i, t, y) {
+        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+        t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+        y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, 'clarity', 'script', CLARITY);
+    }
+
+    while (queue.length) { const [n, p] = queue.shift(); window.atodTrack(n, p); }
+  }
+
+  /* ---- הבאנר ---- */
+  let banner = null;
+  function buildBanner() {
+    banner = document.createElement('div');
+    banner.className = 'consent';
+    banner.setAttribute('role', 'dialog');
+    banner.setAttribute('aria-label', 'הסכמה לשימוש בעוגיות');
+    banner.innerHTML =
+      '<p class="consent__t">אנחנו רוצים להבין איך משתמשים באתר כדי לשפר אותו. ' +
+      'לשם כך נשתמש בעוגיות של Google Analytics ושל Microsoft Clarity, שמקליט את המסך בזמן הגלישה. ' +
+      'בלי הסכמתכם לא ייטען דבר. פרטים ב<a href="privacy.html">מדיניות הפרטיות</a>.</p>' +
+      '<div class="consent__btns">' +
+      '<button type="button" class="consent__ok">אני מאשר</button>' +
+      '<button type="button" class="consent__no">רק ההכרחי</button>' +
+      '</div>';
+    document.body.appendChild(banner);
+    document.body.dataset.consentOpen = 'true';
+    document.body.style.setProperty('--consent-h', banner.offsetHeight + 'px');
+
+    banner.querySelector('.consent__ok').addEventListener('click', () => decide('granted'));
+    banner.querySelector('.consent__no').addEventListener('click', () => decide('denied'));
+  }
+
+  function decide(v) {
+    set(v);
+    if (banner) { banner.remove(); banner = null; }
+    delete document.body.dataset.consentOpen;
+    if (v === 'granted') loadScripts();
+  }
+
+  /* כפתור בפוטר לשינוי ההחלטה בכל רגע */
+  document.querySelectorAll('[data-consent-reopen]').forEach(b => {
+    if (!ON) return;
+    b.hidden = false;
+    b.addEventListener('click', () => { if (!banner) buildBanner(); });
+  });
+
+  if (ON) {
+    const c = get();
+    if (c === 'granted') loadScripts();
+    else if (c !== 'denied') buildBanner();
+  }
+
+  /* ---- מה נמדד ---- */
+  const T = (n, p) => window.atodTrack(n, p);
+
+  // צפייה במוצר
+  const cta = document.querySelector('[data-add]');
+  if (cta) T('view_item', {
+    item_id: cta.dataset.add, item_name: cta.dataset.name,
+    value: +cta.dataset.price, currency: 'ILS',
+  });
+
+  document.addEventListener('click', e => {
+    const add = e.target.closest('[data-add]');
+    if (add) {
+      T('add_to_cart', {
+        item_id: add.dataset.add, item_name: add.dataset.name,
+        value: +add.dataset.price, currency: 'ILS',
+      });
+      return;
+    }
+    const rm = e.target.closest('[data-remove]');
+    if (rm) { T('remove_from_cart', { item_id: rm.dataset.remove }); return; }
+
+    // "להשלמת ההזמנה" — הצעד שאנחנו הכי רוצים למדוד
+    const co = e.target.closest('.drawer__foot .btn-primary');
+    if (co) {
+      let sum = 0;
+      try { sum = (JSON.parse(localStorage.getItem('atod_cart_v1')) || [])
+        .reduce((s, l) => s + l.price * l.qty, 0); } catch {}
+      T('begin_checkout', { value: sum, currency: 'ILS' });
+      return;
+    }
+    if (e.target.closest('.m3d__ar'))        T('view_in_ar');
+    if (e.target.closest('.masonry figure')) T('gallery_open');
+  });
+
+  // פתיחת העגלה
+  const dr = document.querySelector('.drawer');
+  if (dr) new MutationObserver(() => {
+    if (dr.dataset.open === 'true') T('view_cart');
+  }).observe(dr, { attributes: true, attributeFilter: ['data-open'] });
+
+  // שליחת טופס צור קשר
+  document.querySelector('#contact-form, .form')?.addEventListener('submit', () => T('contact_submit'));
+  document.querySelector('#news-form')?.addEventListener('submit', () => T('newsletter_signup'));
 })();
