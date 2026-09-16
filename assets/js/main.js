@@ -409,7 +409,7 @@
    ריק = כלום לא נטען, ואין באנר.
    הסקריפטים נטענים אך ורק אחרי הסכמה מפורשת. */
 (function () {
-  const GA      = 'G-REPLACE';     // Google Analytics 4  (Measurement ID)
+  const GA      = 'G-6R01MNSJWQ'; // Google Analytics 4  (Measurement ID · נכס studioatod, חשבון A-tod)
   const CLARITY = 'REPLACE';       // Microsoft Clarity   (Project ID)
 
   const has = v => v && !/REPLACE/.test(v);
@@ -479,7 +479,10 @@
     banner.setAttribute('aria-label', 'הסכמה לשימוש בעוגיות');
     banner.innerHTML =
       '<p class="consent__t">אנחנו רוצים להבין איך משתמשים באתר כדי לשפר אותו. ' +
-      'לשם כך נשתמש בעוגיות של Google Analytics ושל Microsoft Clarity, שמקליט את המסך בזמן הגלישה. ' +
+      'לשם כך נשתמש בעוגיות של ' +
+      (has(GA) && has(CLARITY) ? 'Google Analytics ושל Microsoft Clarity, שמקליט את המסך בזמן הגלישה'
+        : has(CLARITY) ? 'Microsoft Clarity, שמקליט את המסך בזמן הגלישה'
+        : 'Google Analytics') + '. ' +
       'בלי הסכמתכם לא ייטען דבר. פרטים ב<a href="privacy.html">מדיניות הפרטיות</a>.</p>' +
       '<div class="consent__btns">' +
       '<button type="button" class="consent__ok">אני מאשר</button>' +
