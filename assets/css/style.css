@@ -857,3 +857,42 @@ body[data-a11y-motion] *::after{
   animation-duration:.001ms!important;animation-iteration-count:1!important;
   transition-duration:.001ms!important;scroll-behavior:auto!important;
 }
+
+/* ============================================================
+   הסכמה לעוגיות + מדידה
+   ============================================================ */
+.footer__btn{
+  border:0;background:none;padding:0;cursor:pointer;text-align:right;
+  font:inherit;color:inherit;
+}
+.footer__btn:hover{text-decoration:underline}
+
+.consent{
+  position:fixed;inset-inline:0;bottom:0;z-index:70;
+  background:var(--white);border-top:1px solid var(--hairline);
+  box-shadow:0 -4px 22px rgba(0,0,0,.09);
+  padding:16px clamp(16px,2.4vw,38px);
+  display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  direction:rtl;text-align:right;
+}
+.consent[hidden]{display:none}
+.consent__t{
+  font-family:var(--f-he);font-weight:200;font-size:15px;line-height:1.55;
+  margin:0;max-width:62ch;
+}
+.consent__t a{text-decoration:underline}
+.consent__btns{display:flex;gap:8px;flex:none}
+.consent__btns button{
+  cursor:pointer;padding:11px 22px;font-family:var(--f-he);font-weight:400;font-size:15px;
+  border:1px solid var(--ink);background:var(--white);color:var(--ink);
+}
+.consent__ok{background:var(--ink)!important;color:var(--white)!important}
+
+/* הלחצן הצף של הנגישות מתרומם כל עוד הבאנר פתוח, כדי שלא יוסתר */
+body[data-consent-open] .a11y{bottom:calc(16px + var(--consent-h,96px))}
+
+@media (max-width:860px){
+  .consent{flex-direction:column;align-items:stretch;gap:12px;padding:14px 16px}
+  .consent__btns{justify-content:stretch}
+  .consent__btns button{flex:1}
+}
