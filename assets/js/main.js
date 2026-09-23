@@ -561,3 +561,92 @@
   document.querySelector('#contact-form, .form')?.addEventListener('submit', () => T('contact_submit'));
   document.querySelector('#news-form')?.addEventListener('submit', () => T('newsletter_signup'));
 })();
+
+/* ---------- צ'ק-אאוט וסליקה (Grow דרך Make) ----------
+   בלוק עצמאי: מפנה את כפתור העגלה לעמוד הצ'ק-אאוט, מרכיב שם את סיכום
+   ההזמנה ושולח אותה ל-Make, שמייצר קישור תשלום ב-Grow ומפנה אליו.
+   הסכום מחושב כאן; ב-Make יושבת רצפת מחיר שחוסמת סכום שהתעסקו בו. */
+(() => {
+  'use strict';
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const ILS = n => '₪' + n.toLocaleString('he-IL', { minimumFractionDigits: 2 });
+  const KEY = 'atod_cart_v1';
+  const readCart = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+
+  const ENDPOINT = 'https://hook.eu2.make.com/jgrgamto3vgdm7pbkxgs3jbihuwk0czd';
+
+  /* כפתור ההזמנה בעגלה, בכל עמודי האתר */
+  const foot = $('.drawer__foot');
+  if (foot) {
+    const btn = $('.btn-primary', foot);
+    if (btn) btn.href = 'checkout.html';
+    const note = $('.form-note', foot);
+    if (note) note.textContent = 'תשלום מאובטח — אשראי, bit ו-Apple Pay.';
+  }
+
+  /* חזרה מתשלום מוצלח — מרוקנים את העגלה */
+  if (/thank-you\.html$/.test(location.pathname)) {
+    try { localStorage.removeItem(KEY); } catch {}
+    $$('.cart__count').forEach(b => { b.textContent = '0'; b.dataset.empty = 'true'; });
+  }
+
+  const form = $('#checkout-form');
+  if (!form) return;
+
+  const cart = readCart();
+  if (!cart.length) { location.replace('collection.html'); return; }
+
+  form.action = ENDPOINT;
+
+  const sub   = cart.reduce((s, l) => s + l.price * l.qty, 0);
+  const units = cart.reduce((s, l) => s + l.qty, 0);
+  const ship  = units >= 2 ? 0 : 50;
+
+  $('#co-lines').innerHTML = cart.map(l =>
+    '<div class="line"><img src="' + l.img + '" alt="" loading="lazy"><div>' +
+    '<div class="line__n">' + l.name + '</div>' +
+    '<div class="line__p">' + l.qty + ' × ' + ILS(l.price) + '</div>' +
+    '</div></div>').join('');
+  $('#co-sub').textContent   = ILS(sub);
+  $('#co-ship').textContent  = ship ? ILS(ship) : 'חינם';
+  $('#co-total').textContent = ILS(sub + ship);
+  $('#co-hint').textContent  = units >= 2
+    ? 'משלוח חינם — שני פריטים ומעלה'
+    : 'הוספת פריט נוסף מזכה במשלוח חינם';
+
+  /* Grow מסנן תווים מיוחדים מתיאור המוצר */
+  $('#c-items').value  = cart.map(l => l.name + ' ' + l.qty + ' יח').join(', ')
+                         + (ship ? ', משלוח 50' : '');
+  $('#c-units').value  = units;
+  $('#c-amount').value = (sub + ship).toFixed(2);
+
+  if (new URLSearchParams(location.search).get('cancelled') === '1') {
+    const n = $('#pay-cancelled'); if (n) n.hidden = false;
+  }
+
+  const err = $('#c-error');
+  const mark = (field, bad) => { const f = field.closest('.field'); if (f) f.dataset.error = String(bad); return !bad; };
+  const isPhone = v => /^0(5\d|[2-4]|7\d|8|9)\d{7}$/.test(v.replace(/[-\s]/g, ''));
+  const isMail  = v => /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v);
+
+  form.addEventListener('submit', e => {
+    const f = form.elements;
+    let ok = true;
+    ok = mark(f.fullName, f.fullName.value.trim().split(/\s+/).length < 2) && ok;
+    ok = mark(f.phone,   !isPhone(f.phone.value))                          && ok;
+    ok = mark(f.email,   !isMail(f.email.value.trim()))                    && ok;
+    ok = mark(f.address, !f.address.value.trim())                          && ok;
+    ok = mark(f.city,    !f.city.value.trim())                             && ok;
+    if (!ok) {
+      e.preventDefault();
+      if (err) { err.hidden = false; err.textContent = 'יש להשלים את הפרטים המסומנים.'; }
+      form.querySelector('.field[data-error="true"] input')?.focus();
+      return;
+    }
+    f.phone.value = f.phone.value.replace(/[-\s]/g, '');
+    if (err) err.hidden = true;
+    const btn = $('#c-submit');
+    if (btn) { btn.disabled = true; btn.textContent = 'מעבירים לתשלום…'; }
+  });
+})();
