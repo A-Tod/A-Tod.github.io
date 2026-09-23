@@ -660,7 +660,7 @@
   const DEFAULT = 'made';
   const STATE = {
     in:   'קיים במלאי',
-    made: 'נוצק לפי הזמנה',
+    made: 'אזל המלאי',
     out:  'אזל זמנית',
   };
 
