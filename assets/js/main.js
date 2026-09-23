@@ -650,3 +650,92 @@
     if (btn) { btn.disabled = true; btn.textContent = 'מעבירים לתשלום…'; }
   });
 })();
+
+/* ---------- זמינות מלאי ----------
+   המצב של כל מוצר נקרא מ-/stock.json — קובץ אחד, 12 שורות.
+   רועי עורך אותו ישירות ב-GitHub; האתר מתעדכן בלי בנייה מחדש.
+   מוצר שלא מופיע בקובץ, או קובץ שלא נטען — מוצג כ"נוצק לפי הזמנה",
+   שזו ברירת המחדל הנכונה לעבודת יד ולא מבטיחה דבר שאינו נכון. */
+(() => {
+  const DEFAULT = 'made';
+  const STATE = {
+    in:   'במלאי · מוכן למשלוח',
+    made: 'נוצק לפי הזמנה · עד 10 ימי עסקים',
+    out:  'אזל זמנית',
+  };
+
+  const css = `
+.stock{display:flex;align-items:center;gap:8px;margin-top:12px;
+  font-family:var(--f-he);font-weight:200;font-size:14px;line-height:1.4}
+.stock::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.stock[data-k="in"]{color:#3F5D34}
+.stock[data-k="made"]{color:rgba(46,37,31,.68)}
+.stock[data-k="out"]{color:#7a2718}
+.stock__ask{display:inline-block;margin-top:10px;font-family:var(--f-he);font-weight:200;
+  font-size:14px;color:rgba(46,37,31,.68);border-bottom:1px solid rgba(46,37,31,.45);padding-bottom:2px}
+.pdp__cta[disabled]{opacity:.4;cursor:not-allowed}
+.card__out{position:absolute;top:10px;inset-inline-start:10px;z-index:2;
+  background:rgba(255,255,255,.94);color:#7a2718;
+  font-family:var(--f-he);font-weight:400;font-size:12px;letter-spacing:.05em;padding:5px 11px}
+`;
+  const s = document.createElement('style');
+  s.textContent = css;
+  document.head.appendChild(s);
+
+  const slugOf = href => {
+    const m = String(href || '').match(/product-([a-z0-9]+)\.html/i);
+    return m ? m[1].toLowerCase() : null;
+  };
+
+  function paint(stock) {
+    const key = sl => {
+      const v = String(stock[sl] || '').toLowerCase().trim();
+      return STATE[v] ? v : DEFAULT;
+    };
+
+    /* --- עמוד מוצר --- */
+    const cta = document.querySelector('.pdp__cta[data-add]');
+    const price = document.querySelector('.pdp__price');
+    if (cta && price) {
+      const sl = cta.dataset.add;
+      const k = key(sl);
+
+      const b = document.createElement('div');
+      b.className = 'stock';
+      b.dataset.k = k;
+      b.setAttribute('role', 'status');
+      b.textContent = STATE[k];
+      price.insertAdjacentElement('afterend', b);
+
+      if (k === 'out') {
+        cta.disabled = true;
+        cta.setAttribute('aria-disabled', 'true');
+        const lab = cta.querySelector('[data-cta-label]') || cta;
+        lab.textContent = 'אזל זמנית';
+
+        const ask = document.createElement('a');
+        ask.className = 'stock__ask';
+        ask.href = 'contact.html';
+        ask.textContent = 'רוצים שנעדכן כשיחזור? דברו איתנו';
+        (cta.closest('.pdp__buy') || cta.parentElement).insertAdjacentElement('afterend', ask);
+      }
+    }
+
+    /* --- כרטיסי מוצר בקטגוריות ובדף כל הדגמים --- */
+    document.querySelectorAll('a.card[href]').forEach(card => {
+      const sl = slugOf(card.getAttribute('href'));
+      if (!sl || key(sl) !== 'out') return;
+      const media = card.querySelector('.card__media');
+      if (!media || media.querySelector('.card__out')) return;
+      const tag = document.createElement('span');
+      tag.className = 'card__out';
+      tag.textContent = 'אזל זמנית';
+      media.appendChild(tag);
+    });
+  }
+
+  fetch('stock.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(r => (r.ok ? r.json() : {}))
+    .catch(() => ({}))
+    .then(data => paint(data && typeof data === 'object' ? data : {}));
+})();
