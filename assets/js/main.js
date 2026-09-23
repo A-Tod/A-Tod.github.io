@@ -654,14 +654,14 @@
 /* ---------- זמינות מלאי ----------
    המצב של כל מוצר נקרא מ-/stock.json — קובץ אחד, 12 שורות.
    רועי עורך אותו ישירות ב-GitHub; האתר מתעדכן בלי בנייה מחדש.
-   מוצר שלא מופיע בקובץ, או קובץ שלא נטען — מוצג כ"נוצק לפי הזמנה",
-   שזו ברירת המחדל הנכונה לעבודת יד ולא מבטיחה דבר שאינו נכון. */
+   שני מצבים בלבד: קיים במלאי / אזל זמנית.
+   מוצר שלא מופיע בקובץ, ערך לא מוכר, או קובץ שלא נטען — מוצג כ"קיים במלאי",
+   כדי שתקלה בקובץ לא תחסום מכירה. */
 (() => {
-  const DEFAULT = 'made';
+  const DEFAULT = 'in';
   const STATE = {
-    in:   'קיים במלאי',
-    made: 'אזל המלאי',
-    out:  'אזל זמנית',
+    in:  'קיים במלאי',
+    out: 'אזל זמנית',
   };
 
   const css = `
@@ -669,7 +669,6 @@
   font-family:var(--f-he);font-weight:200;font-size:14px;line-height:1.4}
 .stock::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
 .stock[data-k="in"]{color:#3F5D34}
-.stock[data-k="made"]{color:rgba(46,37,31,.68)}
 .stock[data-k="out"]{color:#7a2718}
 .stock__ask{display:inline-block;margin-top:10px;font-family:var(--f-he);font-weight:200;
   font-size:14px;color:rgba(46,37,31,.68);border-bottom:1px solid rgba(46,37,31,.45);padding-bottom:2px}
