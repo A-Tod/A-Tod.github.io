@@ -1,0 +1,58 @@
+# מסנכרן את products.txt (הפיד ל-Google Merchant Center) עם האתר.
+#
+# למה: הפיד היה סטטי. שינוי מחיר בדף מוצר או שינוי זמינות ב-stock.json
+# לא עדכן אותו, וגוגל היה מציג מחיר או מלאי שאינם תואמים לדף — מה שגורם
+# לפסילת מוצרים ב-Merchant Center.
+#
+# מתי זה רץ:
+#   • בכל דחיפה שנוגעת ב-stock.json או בדף מוצר  (עדכון תוך דקה)
+#   • כל יום ב-03:00 UTC, לפני המשיכה היומית של גוגל  (רשת ביטחון)
+#   • ידנית מלשונית Actions  (Run workflow)
+#
+# הקובץ products.txt עצמו אינו מופיע ב-paths, ולכן הקומיט שהתהליך עושה
+# אינו מפעיל את התהליך מחדש. אין לולאה.
+
+name: sync-feed
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'stock.json'
+      - 'product-*.html'
+      - 'tools/sync_feed.py'
+      - '.github/workflows/sync-feed.yml'
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-feed
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: סנכרון מחיר, זמינות ותמונה
+        run: python3 tools/sync_feed.py | tee "$GITHUB_STEP_SUMMARY"
+
+      - name: קומיט רק אם משהו באמת השתנה
+        run: |
+          if [ -z "$(git status --porcelain products.txt)" ]; then
+            echo "products.txt כבר תואם לאתר — אין מה לדחוף."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add products.txt
+          git commit -m "sync: products.txt לפי מחירי האתר ו-stock.json"
+          git push
+
+      - name: אימות שהפיד תואם לאתר
+        run: python3 tools/sync_feed.py --check
