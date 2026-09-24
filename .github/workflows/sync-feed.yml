@@ -1,16 +1,20 @@
-# מסנכרן את products.txt (הפיד ל-Google Merchant Center) עם האתר.
+# מסנכרן את הנתונים שגוגל קוראת מהאתר: products.txt, הנתונים המובנים
+# בדפי המוצר, ו-sitemap.xml.
 #
-# למה: הפיד היה סטטי. שינוי מחיר בדף מוצר או שינוי זמינות ב-stock.json
-# לא עדכן אותו, וגוגל היה מציג מחיר או מלאי שאינם תואמים לדף — מה שגורם
-# לפסילת מוצרים ב-Merchant Center.
+# למה: שלושת הקבצים האלה היו סטטיים. שינוי מחיר בדף מוצר, שינוי זמינות
+# ב-stock.json או הוספת עמוד חדש לא עדכנו אותם, ונוצר פער בין מה שגוגל
+# מציגה לבין מה שהאתר מציג. פער במחיר או במלאי גורם לפסילת מוצרים
+# ב-Merchant Center; מפת אתר שלא מתעדכנת משאירה עמודים מחוץ לאינדקס.
 #
 # מתי זה רץ:
-#   • בכל דחיפה שנוגעת ב-stock.json או בדף מוצר  (עדכון תוך דקה)
+#   • בכל דחיפה שנוגעת ב-stock.json, בעמוד HTML או בכלים  (עדכון תוך דקה)
 #   • כל יום ב-03:00 UTC, לפני המשיכה היומית של גוגל  (רשת ביטחון)
 #   • ידנית מלשונית Actions  (Run workflow)
 #
-# מה מתעדכן: products.txt וגם בלוק ה-JSON-LD בכל דף מוצר — שני העותקים
-# הסטטיים של המחיר והמלאי שגוגל קורא.
+# מה מתעדכן:
+#   products.txt              מחיר, זמינות ותמונה לכל מוצר
+#   product-*.html            בלוק ה-JSON-LD — העותק השני של המחיר והמלאי
+#   sitemap.xml               רשימת העמודים ותאריך העדכון של כל אחד
 #
 # הקומיט של התהליך נושא [skip ci], ולכן אינו מפעיל את התהליך מחדש. אין לולאה.
 
@@ -21,8 +25,10 @@ on:
     branches: [main]
     paths:
       - 'stock.json'
-      - 'product-*.html'
+      - '*.html'
+      - 'sitemap.xml'
       - 'tools/sync_feed.py'
+      - 'tools/sync_sitemap.py'
       - '.github/workflows/sync-feed.yml'
   schedule:
     - cron: '0 3 * * *'
@@ -39,22 +45,32 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 — מפת האתר לוקחת את <lastmod> מתאריך הקומיט האחרון
+      # שנגע בכל עמוד, ולכן דרושה ההיסטוריה המלאה ולא רק הקומיט האחרון.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: סנכרון מחיר, זמינות ותמונה
-        run: python3 tools/sync_feed.py | tee "$GITHUB_STEP_SUMMARY"
+        run: python3 tools/sync_feed.py | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: סנכרון מפת האתר
+        run: python3 tools/sync_sitemap.py | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: קומיט רק אם משהו באמת השתנה
         run: |
-          if [ -z "$(git status --porcelain products.txt product-*.html)" ]; then
-            echo "הפיד והנתונים המובנים כבר תואמים לאתר — אין מה לדחוף."
+          if [ -z "$(git status --porcelain products.txt sitemap.xml product-*.html)" ]; then
+            echo "הפיד, הנתונים המובנים ומפת האתר כבר תואמים — אין מה לדחוף."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add products.txt product-*.html
-          git commit -m "sync: מחיר וזמינות בפיד ובנתונים המובנים [skip ci]"
+          git add products.txt sitemap.xml product-*.html
+          git commit -m "sync: מחיר, זמינות ומפת אתר [skip ci]"
           git push
 
       - name: אימות שהפיד תואם לאתר
         run: python3 tools/sync_feed.py --check
+
+      - name: אימות שמפת האתר תואמת למאגר
+        run: python3 tools/sync_sitemap.py --check
