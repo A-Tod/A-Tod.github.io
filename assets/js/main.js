@@ -752,13 +752,25 @@
   s.textContent = `
 .line{cursor:pointer}
 .line__link{color:inherit;text-decoration:none}
-.line:hover .line__n{text-decoration:underline;text-underline-offset:2px}
 .line__x{cursor:pointer}
-/* במובייל הדפדפן צובע כל אזור לחיץ בכחול בזמן הנגיעה.
-   כשכל השורה הפכה ללחיצה, הכתם הזה כיסה אותה כולה. */
+
+/* --- הכתם הכחול במובייל ---
+   נמדד מתוך ההקלטה: rgb(171,224,244) פרוס על כל השורה, כולל התמונה.
+   שני מנגנונים של הדפדפן יכולים לייצר אותו, ושניהם מנוטרלים כאן:
+   1. tap highlight — הצבע שהדפדפן מורח על אזור לחיץ בזמן נגיעה.
+   2. בחירת טקסט — נגיעה על אזור לחיץ שאינו קישור עלולה לסמן את תוכנו. */
 .line,.line *{-webkit-tap-highlight-color:transparent}
-/* במקומו — היענות עדינה משלנו, כדי שהנגיעה לא תרגיש מתה. */
+.line{-webkit-user-select:none;user-select:none}
+.line::selection,.line *::selection{background:transparent}
+
+/* במקומם — היענות עדינה משלנו, כדי שהנגיעה לא תרגיש מתה. */
 .line:active{background:rgba(46,37,31,.045)}
+
+/* הקו התחתון נשאר "תקוע" אחרי נגיעה במסך מגע, כי הדפדפן מדמה hover.
+   מוגבל למכשירים עם עכבר אמיתי. */
+@media (hover:hover){
+  .line:hover .line__n{text-decoration:underline;text-underline-offset:2px}
+}
 `;
   document.head.appendChild(s);
 
