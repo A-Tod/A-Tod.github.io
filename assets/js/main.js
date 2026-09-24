@@ -667,8 +667,22 @@
   const css = `
 .stock{display:flex;align-items:center;gap:8px;margin-top:12px;
   font-family:var(--f-he);font-weight:200;font-size:14px;line-height:1.4}
+.stock{position:relative}
 .stock::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
 .stock[data-k="in"]{color:#3F5D34}
+.stock[data-k="in"]::before{width:8px;height:8px;
+  background:radial-gradient(circle at 33% 28%, #8FC77A 0%, #4E7A3C 55%, #2F4827 100%)}
+.stock[data-k="in"]::after{content:'';position:absolute;inset-inline-start:0;top:50%;
+  width:8px;height:8px;margin-top:-4px;border-radius:50%;pointer-events:none;
+  border:1px solid rgba(78,122,60,.75);
+  animation:stockPulse 2.4s cubic-bezier(.22,.61,.36,1) infinite}
+@keyframes stockPulse{
+  0%{transform:scale(1);opacity:.6}
+  70%,100%{transform:scale(2.6);opacity:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .stock[data-k="in"]::after{animation:none;opacity:.42;transform:scale(1.9)}
+}
 .stock[data-k="out"]{color:#7a2718}
 .stock__ask{display:inline-block;margin-top:10px;font-family:var(--f-he);font-weight:200;
   font-size:14px;color:rgba(46,37,31,.68);border-bottom:1px solid rgba(46,37,31,.45);padding-bottom:2px}
