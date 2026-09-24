@@ -754,6 +754,11 @@
 .line__link{color:inherit;text-decoration:none}
 .line:hover .line__n{text-decoration:underline;text-underline-offset:2px}
 .line__x{cursor:pointer}
+/* במובייל הדפדפן צובע כל אזור לחיץ בכחול בזמן הנגיעה.
+   כשכל השורה הפכה ללחיצה, הכתם הזה כיסה אותה כולה. */
+.line,.line *{-webkit-tap-highlight-color:transparent}
+/* במקומו — היענות עדינה משלנו, כדי שהנגיעה לא תרגיש מתה. */
+.line:active{background:rgba(46,37,31,.045)}
 `;
   document.head.appendChild(s);
 
