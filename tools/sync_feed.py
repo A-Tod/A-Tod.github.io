@@ -12,10 +12,18 @@
 
 מה הסקריפט מעדכן, ומה הוא לא נוגע בו
 ------------------------------------
-מתעדכן אוטומטית (השדות שמשתנים בפועל):
+מתעדכן אוטומטית ב-products.txt (השדות שמשתנים בפועל):
   price          <- data-price של כפתור ההזמנה בדף המוצר
   availability   <- stock.json  (in -> in_stock, out -> out_of_stock)
   image_link     <- data-img של כפתור ההזמנה, כתובת מוחלטת
+
+ובנוסף, בתוך כל דף מוצר, בבלוק ה-JSON-LD (הנתונים המובנים שגוגל קורא):
+  offers.price         <- data-price
+  offers.availability  <- stock.json  (InStock / OutOfStock)
+
+זה חשוב: ה-JSON-LD הוא עותק סטטי שני של המחיר והמלאי. בלי הסנכרון הזה,
+שינוי ב-stock.json היה משאיר את הדף מצהיר InStock בזמן שהכפתור נעול —
+בדיוק הפער ש-Merchant Center פוסל עליו.
 
 נשאר בדיוק כפי שהוא (תוכן שנכתב ביד):
   id, title, description, link, condition, brand, mpn
@@ -41,6 +49,12 @@ DEFAULT_AVAIL = "in_stock"          # מוצר שלא מופיע ב-stock.json �
 
 CTA = re.compile(r"<button[^>]*\bclass=\"[^\"]*pdp__cta[^\"]*\"[^>]*>", re.I)
 ATTR = lambda name: re.compile(r"data-%s=\"([^\"]*)\"" % name, re.I)
+
+LD = re.compile(r"(<script[^>]*ld\+json[^>]*>)([\s\S]*?)(</script>)", re.I)
+LD_AVAIL = re.compile(r"(\"availability\"\s*:\s*\")([^\"]*)(\")")
+LD_PRICE = re.compile(r"(\"price\"\s*:\s*)(\"?)(\d+(?:\.\d+)?)(\"?)")
+SCHEMA = {"in_stock": "https://schema.org/InStock",
+          "out_of_stock": "https://schema.org/OutOfStock"}
 
 
 def read_stock():
@@ -68,6 +82,43 @@ def page_data(slug):
         "price": price.group(1).strip(),
         "image": image.group(1).strip() if image else None,
     }
+
+
+def sync_structured_data(slug, price, availability, write=True):
+    """מעדכן מחיר וזמינות בתוך בלוק ה-JSON-JSON-LD של דף המוצר.
+    לא מפענח ולא מרכיב מחדש את ה-JSON — מחליף ערך במקום, כדי שהפורמט,
+    הסדר והתווים העבריים יישארו בדיוק כפי שהם."""
+    path = os.path.join(ROOT, "product-%s.html" % slug)
+    if not os.path.exists(path):
+        return []
+    html = open(path, encoding="utf-8").read()
+    m = LD.search(html)
+    if not m:
+        return ["%s: אין בלוק JSON-LD בדף המוצר" % slug]
+
+    block, diffs = m.group(2), []
+    want_avail = SCHEMA[availability]
+    want_price = str(int(float(price))) if float(price) == int(float(price)) else str(float(price))
+
+    def fix_avail(mm):
+        if mm.group(2) != want_avail:
+            diffs.append("%s · JSON-LD availability: %s -> %s"
+                         % (slug, mm.group(2).split("/")[-1], want_avail.split("/")[-1]))
+        return mm.group(1) + want_avail + mm.group(3)
+
+    def fix_price(mm):
+        if mm.group(3) != want_price:
+            diffs.append("%s · JSON-LD price: %s -> %s" % (slug, mm.group(3), want_price))
+        return mm.group(1) + mm.group(2) + want_price + mm.group(4)
+
+    new_block = LD_AVAIL.sub(fix_avail, block)
+    new_block = LD_PRICE.sub(fix_price, new_block)
+
+    if diffs and write:
+        out = html[:m.start(2)] + new_block + html[m.end(2):]
+        with open(path, "w", encoding="utf-8", newline="") as f:
+            f.write(out)
+    return diffs
 
 
 def money(value):
@@ -129,6 +180,9 @@ def main():
                 changes.append("%s · %s: %s -> %s" % (slug, field, old, new))
                 row[col[field]] = new
 
+        changes += sync_structured_data(
+            slug, data["price"], row[col["availability"]], write=not check_only)
+
         out.append("\t".join(row))
 
     for slug in sorted(set(stock) - seen):
@@ -138,7 +192,7 @@ def main():
         print("אזהרה: " + w)
 
     if not changes:
-        print("products.txt מעודכן. אין פערים במחיר, בזמינות או בתמונה.")
+        print("הפיד והנתונים המובנים תואמים לאתר. אין פערים במחיר, בזמינות או בתמונה.")
         return 0
 
     print("נמצאו %d פערים:" % len(changes))
@@ -150,7 +204,7 @@ def main():
 
     with open(FEED, "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(out) + "\n")
-    print("products.txt נכתב מחדש.")
+    print("products.txt נכתב מחדש. דפי המוצר עודכנו במידת הצורך.")
     return 0
 
 
