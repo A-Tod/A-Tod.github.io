@@ -809,3 +809,20 @@
     if (line && line.dataset.sku) location.href = href(line.dataset.sku);
   });
 })();
+
+/* ---------- מובייל: ביטול הכתם הכחול על כל אזור לחיץ ----------
+   בנגיעה, הדפדפן מורח צבע על הכפתור או הקישור שנגעו בו.
+   המאפיין עובר בירושה, ולכן כלל אחד על html מכסה את כל האתר. */
+(() => {
+  const s = document.createElement('style');
+  s.textContent = `
+html{-webkit-tap-highlight-color:transparent}
+/* במקום הכתם — עמעום קצר על כפתורים בלבד, כדי שהנגיעה לא תרגיש מתה.
+   רק במכשירי מגע; בעכבר ממשיכים לעבוד מצבי ה-hover הקיימים. */
+@media (hover:none){
+  button:active,[role="button"]:active,.btn-primary:active,.pdp__cta:active{opacity:.78}
+  button[disabled]:active,.pdp__cta[disabled]:active{opacity:.4}
+}
+`;
+  document.head.appendChild(s);
+})();
