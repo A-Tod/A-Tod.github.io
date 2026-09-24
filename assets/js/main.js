@@ -738,3 +738,57 @@
     .catch(() => ({}))
     .then(data => paint(data && typeof data === 'object' ? data : {}));
 })();
+
+/* ---------- מעבר מהעגלה לדף המוצר ----------
+   כל שורה בעגלה מובילה לדף המוצר שלה. ה-sku נלקח מכפתור ההסרה,
+   שהוא המקום היחיד שבו הוא מופיע בשורה.
+   השם עצמו הוא קישור אמיתי — כדי שיעבוד גם במקלדת, בלחיצה אמצעית
+   ובפתיחה בלשונית חדשה. שאר השורה לחיצה רגילה. */
+(() => {
+  const body = document.querySelector('.drawer__body');
+  if (!body) return;
+
+  const s = document.createElement('style');
+  s.textContent = `
+.line{cursor:pointer}
+.line__link{color:inherit;text-decoration:none}
+.line:hover .line__n{text-decoration:underline;text-underline-offset:2px}
+.line__x{cursor:pointer}
+`;
+  document.head.appendChild(s);
+
+  const href = sku => 'product-' + sku + '.html';
+
+  function upgrade() {
+    body.querySelectorAll('.line').forEach(line => {
+      if (line.dataset.sku) return;
+      const rm = line.querySelector('[data-remove]');
+      const sku = rm && rm.dataset.remove;
+      if (!sku) return;
+      line.dataset.sku = sku;
+
+      const name = line.querySelector('.line__n');
+      if (name && !name.querySelector('a')) {
+        const a = document.createElement('a');
+        a.className = 'line__link';
+        a.href = href(sku);
+        a.textContent = name.textContent;
+        name.textContent = '';
+        name.appendChild(a);
+      }
+
+      const img = line.querySelector('img');
+      if (img) img.alt = (name ? name.textContent.trim() : '') + ' — מעבר לדף המוצר';
+    });
+  }
+
+  new MutationObserver(upgrade).observe(body, { childList: true, subtree: true });
+  upgrade();
+
+  body.addEventListener('click', e => {
+    if (e.target.closest('[data-remove]')) return;   // הסרה נשארת הסרה
+    if (e.target.closest('a')) return;               // הקישור מטפל בעצמו
+    const line = e.target.closest('.line');
+    if (line && line.dataset.sku) location.href = href(line.dataset.sku);
+  });
+})();
