@@ -210,6 +210,7 @@
     if (btn) { btn.disabled = false; btn.textContent = 'שלח'; }
 
     if (ok) {
+      window.atodTrack?.('generate_lead', { lead_source: 'contact_form' });
       form.reset();
       if (sent) { sent.textContent = 'הפנייה נשלחה. נחזור אליכם תוך יום עסקים אחד.'; sent.hidden = false; }
       return;
@@ -217,6 +218,7 @@
     const body = [`שם: ${name.value.trim()}`, `מייל: ${mail.value.trim()}`,
                   tel.value.trim() ? `טלפון: ${tel.value.trim()}` : null,
                   '', msg].filter(v => v !== null).join('\n');
+    window.atodTrack?.('contact_intent', { method: 'email_form' });
     mailFallback(form.dataset.mailto, 'פנייה מהאתר', body);
     if (sent) sent.hidden = false;
   });
@@ -230,10 +232,12 @@
     m.style.color = ''; m.textContent = 'רושם…';
     const ok = await post({ email: v, סוג: 'הרשמה לרשימת התפוצה' }, 'הרשמה לרשימת התפוצה · 10%');
     if (ok) {
+      window.atodTrack?.('sign_up', { method: 'newsletter_form' });
       form.reset();
       m.textContent = 'נרשמתם. קוד ההנחה יישלח אליכם למייל.';
       return;
     }
+    window.atodTrack?.('newsletter_intent', { method: 'email_form' });
     mailFallback(form.dataset.mailto, 'הרשמה לרשימת התפוצה',
       'אשמח להצטרף לרשימת התפוצה ולקבל את קוד ההנחה.\nכתובת המייל שלי: ' + v);
     m.textContent = 'פתחנו לכם הודעה מוכנה. שלחו אותה ונחזור אליכם עם הקוד.';
@@ -557,9 +561,11 @@
     if (dr.dataset.open === 'true') T('view_cart');
   }).observe(dr, { attributes: true, attributeFilter: ['data-open'] });
 
-  // שליחת טופס צור קשר
-  document.querySelector('#contact-form, .form')?.addEventListener('submit', () => T('contact_submit'));
-  document.querySelector('#news-form')?.addEventListener('submit', () => T('newsletter_signup'));
+  // פנייה או הרשמה נמדדות רק אחרי תשובה מוצלחת מהשרת; פתיחת הודעת מייל היא כוונה בלבד.
+  document.addEventListener('click', e => {
+    const link = e.target.closest('a[href^="mailto:"], a[href^="tel:"]');
+    if (link) T('contact_intent', { method: link.protocol === 'tel:' ? 'phone_click' : 'email_click' });
+  });
 })();
 
 /* ---------- צ'ק-אאוט וסליקה (Grow דרך Make) ----------
