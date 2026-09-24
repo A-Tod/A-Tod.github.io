@@ -183,6 +183,10 @@
     } catch { return false; }
   }
 
+  /* מדידה: נורה רק דרך שכבת האירועים, אחרי הסכמה לקוקיז.
+     generate_lead נשמר אך ורק לפנייה שהשרת אישר שקלט. */
+  const TR = (n, p) => { try { window.atodTrack && window.atodTrack(n, p); } catch {} };
+
   function mailFallback(to, subject, body) {
     location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
@@ -204,21 +208,27 @@
     const sent = document.querySelector('.form-sent');
     if (btn) { btn.disabled = true; btn.textContent = 'שולח…'; }
 
+    TR('contact_intent', { method: 'contact_form' });   // ניסיון יצירת קשר. אינו ליד.
+
     const ok = await post({ שם: name.value.trim(), מייל: mail.value.trim(),
                             טלפון: tel.value.trim(), הודעה: msg,
                             email: mail.value.trim() }, 'פנייה מהאתר');
     if (btn) { btn.disabled = false; btn.textContent = 'שלח'; }
 
     if (ok) {
-      window.atodTrack?.('generate_lead', { lead_source: 'contact_form' });
+      // רק כאן הפנייה באמת נקלטה בשרת — זה הליד היחיד שנספר.
+      TR('generate_lead', { method: 'contact_form', currency: 'ILS', value: 0 });
       form.reset();
       if (sent) { sent.textContent = 'הפנייה נשלחה. נחזור אליכם תוך יום עסקים אחד.'; sent.hidden = false; }
       return;
     }
+
+    // אין endpoint, או שהשליחה נכשלה: נפתחת תוכנת מייל אצל הגולש.
+    // אין שום ודאות שההודעה נשלחה, ולכן זה נמדד בנפרד ולא כליד.
+    TR('contact_mailto_fallback', { method: 'mailto' });
     const body = [`שם: ${name.value.trim()}`, `מייל: ${mail.value.trim()}`,
                   tel.value.trim() ? `טלפון: ${tel.value.trim()}` : null,
                   '', msg].filter(v => v !== null).join('\n');
-    window.atodTrack?.('contact_intent', { method: 'email_form' });
     mailFallback(form.dataset.mailto, 'פנייה מהאתר', body);
     if (sent) sent.hidden = false;
   });
@@ -230,14 +240,15 @@
     if (!emailOk(v)) { m.textContent = 'נא להזין כתובת מייל תקינה'; m.style.color = '#7a2718'; return; }
 
     m.style.color = ''; m.textContent = 'רושם…';
+    TR('newsletter_intent');                            // ניסיון הרשמה. אינו הרשמה.
     const ok = await post({ email: v, סוג: 'הרשמה לרשימת התפוצה' }, 'הרשמה לרשימת התפוצה · 10%');
     if (ok) {
-      window.atodTrack?.('sign_up', { method: 'newsletter_form' });
+      TR('newsletter_signup');                          // נקלט בשרת.
       form.reset();
       m.textContent = 'נרשמתם. קוד ההנחה יישלח אליכם למייל.';
       return;
     }
-    window.atodTrack?.('newsletter_intent', { method: 'email_form' });
+    TR('newsletter_mailto_fallback');
     mailFallback(form.dataset.mailto, 'הרשמה לרשימת התפוצה',
       'אשמח להצטרף לרשימת התפוצה ולקבל את קוד ההנחה.\nכתובת המייל שלי: ' + v);
     m.textContent = 'פתחנו לכם הודעה מוכנה. שלחו אותה ונחזור אליכם עם הקוד.';
@@ -561,11 +572,9 @@
     if (dr.dataset.open === 'true') T('view_cart');
   }).observe(dr, { attributes: true, attributeFilter: ['data-open'] });
 
-  // פנייה או הרשמה נמדדות רק אחרי תשובה מוצלחת מהשרת; פתיחת הודעת מייל היא כוונה בלבד.
-  document.addEventListener('click', e => {
-    const link = e.target.closest('a[href^="mailto:"], a[href^="tel:"]');
-    if (link) T('contact_intent', { method: link.protocol === 'tel:' ? 'phone_click' : 'email_click' });
-  });
+  /* טופס יצירת קשר וניוזלטר: המדידה יושבת בתוך מודול הטפסים עצמו,
+     כי רק שם יודעים אם השרת באמת קלט את הפנייה. כאן נמדד רק submit
+     שאינו יודע כלום על התוצאה — ולכן הוסר. */
 })();
 
 /* ---------- צ'ק-אאוט וסליקה (Grow דרך Make) ----------
