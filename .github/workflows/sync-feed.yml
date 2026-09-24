@@ -9,8 +9,10 @@
 #   • כל יום ב-03:00 UTC, לפני המשיכה היומית של גוגל  (רשת ביטחון)
 #   • ידנית מלשונית Actions  (Run workflow)
 #
-# הקובץ products.txt עצמו אינו מופיע ב-paths, ולכן הקומיט שהתהליך עושה
-# אינו מפעיל את התהליך מחדש. אין לולאה.
+# מה מתעדכן: products.txt וגם בלוק ה-JSON-LD בכל דף מוצר — שני העותקים
+# הסטטיים של המחיר והמלאי שגוגל קורא.
+#
+# הקומיט של התהליך נושא [skip ci], ולכן אינו מפעיל את התהליך מחדש. אין לולאה.
 
 name: sync-feed
 
@@ -44,14 +46,14 @@ jobs:
 
       - name: קומיט רק אם משהו באמת השתנה
         run: |
-          if [ -z "$(git status --porcelain products.txt)" ]; then
-            echo "products.txt כבר תואם לאתר — אין מה לדחוף."
+          if [ -z "$(git status --porcelain products.txt product-*.html)" ]; then
+            echo "הפיד והנתונים המובנים כבר תואמים לאתר — אין מה לדחוף."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add products.txt
-          git commit -m "sync: products.txt לפי מחירי האתר ו-stock.json"
+          git add products.txt product-*.html
+          git commit -m "sync: מחיר וזמינות בפיד ובנתונים המובנים [skip ci]"
           git push
 
       - name: אימות שהפיד תואם לאתר
