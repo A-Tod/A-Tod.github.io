@@ -855,3 +855,71 @@ html{-webkit-tap-highlight-color:transparent}
 `;
   document.head.appendChild(s);
 })();
+
+
+/* ---------- טלפון תקין לפני מעבר לתשלום ---------- */
+/* למה זה כאן:
+   גרו דחתה בקשות ליצירת קישור תשלום עם שגיאה 427 —
+   "שדה לא תקין: pageFieldSettings[phone][value]".
+   השדה בצ'ק-אאוט היה type="tel" בלי pattern, והטופס novalidate, כלומר
+   הדפדפן לא בדק דבר והאתר שלח את מה שהלקוח הקליד, כמו שהוא.
+   '054-123-4567' או '+972 50…' נפסלו בגרו, קישור התשלום לא נוצר,
+   הלקוח לא הגיע לדף התשלום — והסימן היחיד היה מייל שגיאה מ-Make.
+
+   מה עושים כאן: מנרמלים את המספר לפני שהצ'ק-אאוט שולח אותו, ואם אי אפשר
+   לנרמל אותו למספר נייד ישראלי תקין — עוצרים עם הודעה ברורה ללקוח
+   במקום לתת לגרו לדחות בשקט.
+
+   נרשם על document בשלב ה-capture, ולכן רץ לפני המטפל של הצ'ק-אאוט
+   ויכול לעצור אותו. הקוד הקיים של הצ'ק-אאוט לא שונה. */
+(() => {
+  const init = () => {
+    const form = document.querySelector('#checkout-form');
+    const tel  = document.querySelector('#c-tel');
+    const err  = document.querySelector('#c-error');
+    const btn  = document.querySelector('#c-submit');
+    if (!form || !tel) return;
+
+    const MSG = 'מספר הטלפון אינו תקין. יש להזין מספר נייד ישראלי — עשר ספרות שמתחילות ב-05, למשל 0501234567.';
+
+    /* '054-123 4567' · '+972 54 123 4567' · '00972541234567'  ->  '0541234567' */
+    const normalize = raw => {
+      let d = String(raw == null ? '' : raw).replace(/\D/g, '');
+      if (d.startsWith('00972')) d = '0' + d.slice(5);
+      else if (d.startsWith('972')) d = '0' + d.slice(3);
+      return d;
+    };
+    const valid = d => /^05\d{8}$/.test(d);
+
+    tel.setAttribute('maxlength', '18');
+    tel.setAttribute('autocomplete', 'tel');
+
+    const show = () => {
+      if (err) { err.textContent = MSG; err.hidden = false; err.dataset.phone = '1'; }
+      tel.setAttribute('aria-invalid', 'true');
+      try { tel.focus(); tel.scrollIntoView({ block: 'center' }); } catch (e) {}
+    };
+    /* מנקה רק הודעה שאנחנו הצגנו — הודעות אחרות של הטופס נשארות */
+    const clear = () => {
+      if (err && err.dataset.phone) { err.hidden = true; err.textContent = ''; delete err.dataset.phone; }
+      tel.removeAttribute('aria-invalid');
+    };
+
+    /* מנקים ביציאה מהשדה ולא תוך כדי הקלדה, כדי לא להילחם בלקוח */
+    tel.addEventListener('blur', () => { const d = normalize(tel.value); if (d) tel.value = d; });
+    tel.addEventListener('input', clear);
+
+    const guard = e => {
+      const d = normalize(tel.value);
+      if (!valid(d)) { e.preventDefault(); e.stopImmediatePropagation(); show(); return; }
+      tel.value = d;              /* מכאן ואילך נשלח מספר נקי */
+      clear();
+    };
+    document.addEventListener('submit', e => { if (e.target === form) guard(e); }, true);
+    if (btn) document.addEventListener('click', e => {
+      if (e.target.closest && e.target.closest('#c-submit')) guard(e);
+    }, true);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
