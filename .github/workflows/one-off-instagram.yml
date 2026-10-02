@@ -1,0 +1,41 @@
+# תהליך חד-פעמי: עדכון שם המשתמש באינסטגרם בכל קובצי האתר.
+# רץ רק בהפעלה ידנית, ונמחק אחרי שהוא מסיים את תפקידו.
+name: one-off-instagram
+
+on: workflow_dispatch
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: החלפת הכתובת בכל הקבצים
+        run: |
+          OLD='instagram.com/a___tod'
+          NEW='instagram.com/_a_tod'
+          FILES=$(grep -rl "$OLD" --include='*.html' --include='*.js' --include='*.css' --include='*.json' --include='*.txt' --include='*.xml' . || true)
+          if [ -z "$FILES" ]; then
+            echo "לא נמצאה אף הופעה של הכתובת הישנה." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "$FILES" | sed 's/^/קובץ: /' | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "$FILES" | xargs sed -i "s#instagram\.com/a___tod#instagram.com/_a_tod#g"
+          echo "---" >> "$GITHUB_STEP_SUMMARY"
+          echo "נותרו הופעות ישנות: $(grep -rc "$OLD" --include='*.html' . | grep -v ':0' | wc -l)" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "הופעות חדשות: $(grep -rl "$NEW" --include='*.html' . | wc -l) קבצים" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: קומיט
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "אין שינוי לדחוף."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "אינסטגרם: עדכון שם המשתמש ל-_a_tod בכל העמודים"
+          git push
