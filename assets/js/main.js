@@ -280,7 +280,7 @@
     slides[i].removeAttribute('data-active');
     i = (i + 1) % slides.length;
     slides[i].setAttribute('data-active', 'true');
-  }, +box.dataset.interval || 6000);
+  }, +box.dataset.interval || 3000);
 })();
 
 /* עמוד מוצר: שכבת מידות + מרחיב תיאור + סכום בכפתור */
