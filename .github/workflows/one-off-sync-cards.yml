@@ -1,0 +1,63 @@
+name: one-off-sync-cards
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync product card images from collection.html
+        run: |
+          python3 - <<'PY'
+          import re, glob, io
+
+          CARD = re.compile(r'(<a class="card" href="product-([a-z0-9-]+)\.html">)(.*?)(</a>)', re.S)
+          IMG  = re.compile(r'(<img\s+src=")([^"]+)(")')
+
+          src = io.open('collection.html', encoding='utf-8').read()
+          canon = {}
+          for m in CARD.finditer(src):
+              slug, body = m.group(2), m.group(3)
+              imgs = IMG.findall(body)
+              if len(imgs) >= 2:
+                  canon[slug] = (imgs[0][1], imgs[1][1])
+          print('canonical pairs:', len(canon))
+          for k in sorted(canon):
+              a, b = canon[k]
+              print('  ', k, a.split('177757_')[-1][:12], b.split('177757_')[-1][:12])
+
+          changed = 0
+          for path in sorted(glob.glob('*.html')):
+              if path == 'collection.html':
+                  continue
+              txt = io.open(path, encoding='utf-8').read()
+              def fix(m):
+                  head, slug, body, tail = m.group(1), m.group(2), m.group(3), m.group(4)
+                  if slug not in canon:
+                      return m.group(0)
+                  want = canon[slug]
+                  n = [0]
+                  def repl(im):
+                      i = n[0]; n[0] += 1
+                      return im.group(1) + (want[i] if i < 2 else im.group(2)) + im.group(3)
+                  return head + IMG.sub(repl, body) + tail
+              new = CARD.sub(fix, txt)
+              if new != txt:
+                  io.open(path, 'w', encoding='utf-8').write(new)
+                  print('UPDATED', path)
+                  changed += 1
+          print('files changed:', changed)
+          PY
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "Sync related-product card images with collection.html"
+            git push
+          else
+            echo "nothing to commit"
+          fi
