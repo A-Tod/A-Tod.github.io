@@ -1,4 +1,48 @@
 /* a-tod — site behaviour. Vanilla, no dependencies. */
+
+/* ---------- מבצע בלאק פריידי ----------
+   כל המבצע מוגדר כאן, במקום אחד. כל חישוב מחיר באתר עובר דרך atodPrice.
+   הגוף הראשון (היקר) 25%, כל גוף נוסף 30%, משלוח חינם.
+   גישה מוקדמת: קישור עם ?early=1 פותח את המבצע מ 24.11 בשעה 20:00.
+   תצוגה מקדימה לרועי בלבד: בדפדפן שסומן ב ?notrack=1, להוסיף ?saletest=1 */
+window.atodSale = (() => {
+  const SALE = {
+    early: Date.parse('2026-11-24T20:00:00+02:00'),
+    start: Date.parse('2026-11-26T08:00:00+02:00'),
+    end:   Date.parse('2026-11-30T23:59:59+02:00'),
+    first: 0.25, rest: 0.30,
+    label: 'הנחת בלאק פריידי',
+  };
+  let early = false, test = false;
+  try {
+    const q = new URLSearchParams(location.search);
+    if (q.get('early') === '1') localStorage.setItem('atod_early', '1');
+    if (localStorage.getItem('atod_notrack') === '1') {
+      if (q.get('saletest') === '1') localStorage.setItem('atod_saletest', '1');
+      if (q.get('saletest') === '0') localStorage.removeItem('atod_saletest');
+      test = localStorage.getItem('atod_saletest') === '1';
+    }
+    early = localStorage.getItem('atod_early') === '1';
+  } catch {}
+  const now = Date.now();
+  SALE.on = test || (now <= SALE.end && (now >= SALE.start || (early && now >= SALE.early)));
+  return SALE;
+})();
+
+window.atodPrice = function (cart) {
+  const S = window.atodSale;
+  const units = cart.reduce((n, l) => n + l.qty, 0);
+  const sub   = cart.reduce((n, l) => n + l.price * l.qty, 0);
+  let disc = 0;
+  if (S.on && units) {
+    const each = [];
+    cart.forEach(l => { for (let i = 0; i < l.qty; i++) each.push(l.price); });
+    each.sort((a, b) => b - a);
+    disc = Math.round(each.reduce((n, p, i) => n + p * (i ? S.rest : S.first), 0));
+  }
+  const ship = !units || S.on || units >= 2 ? 0 : 50;
+  return { units, sub, disc, ship, total: sub - disc + ship, sale: S.on, label: S.label };
+};
 (() => {
   'use strict';
   const $  = (s, r = document) => r.querySelector(s);
@@ -94,13 +138,22 @@
         </div>
       </div>`).join('');
 
-    const sub = cart.reduce((s, l) => s + l.price * l.qty, 0);
-    const items = cart.reduce((s, l) => s + l.qty, 0);
-    const ship = items >= 2 ? 0 : 50;
-    $('#sum-sub').textContent = ILS(sub);
-    $('#sum-ship').textContent = ship ? ILS(ship) : 'חינם';
-    $('#sum-total').textContent = ILS(sub + ship);
-    $('#sum-hint').textContent = items >= 2 ? 'משלוח חינם — שני פריטים ומעלה' : 'הוספת פריט נוסף מזכה במשלוח חינם';
+    const P = window.atodPrice(cart);
+    const items = P.units;
+    $('#sum-sub').textContent = ILS(P.sub);
+    let dRow = $('#sum-disc');
+    if (P.disc && !dRow) {
+      const r = document.createElement('div');
+      r.className = 'totals totals--sm';
+      r.innerHTML = '<span>' + P.label + '</span><span id="sum-disc"></span>';
+      $('#sum-sub').parentElement.after(r);
+      dRow = $('#sum-disc');
+    }
+    if (dRow) { dRow.textContent = P.disc ? '−' + ILS(P.disc) : ''; dRow.parentElement.hidden = !P.disc; }
+    $('#sum-ship').textContent = P.ship ? ILS(P.ship) : 'חינם';
+    $('#sum-total').textContent = ILS(P.total);
+    $('#sum-hint').textContent = P.sale ? 'בלאק פריידי: 25% על הגוף הראשון, 30% על כל גוף נוסף, משלוח חינם'
+      : items >= 2 ? 'משלוח חינם — שני פריטים ומעלה' : 'הוספת פריט נוסף מזכה במשלוח חינם';
   }
 
   document.addEventListener('click', e => {
@@ -585,8 +638,7 @@
     const co = e.target.closest('.drawer__foot .btn-primary');
     if (co) {
       let sum = 0;
-      try { sum = (JSON.parse(localStorage.getItem('atod_cart_v1')) || [])
-        .reduce((s, l) => s + l.price * l.qty, 0); } catch {}
+      try { sum = window.atodPrice(JSON.parse(localStorage.getItem('atod_cart_v1')) || []).total; } catch {}
       T('begin_checkout', { value: sum, currency: 'ILS' });
       return;
     }
@@ -634,10 +686,8 @@
        רענון של העמוד מוצא עגלה ריקה ולא סופר שוב. */
     const done = readCart();
     if (done.length && window.atodTrack) {
-      const units = done.reduce((s, l) => s + l.qty, 0);
-      const sub   = done.reduce((s, l) => s + l.price * l.qty, 0);
-      window.atodTrack('purchase', { value: sub + (units >= 2 ? 0 : 50),
-        currency: 'ILS', num_items: units });
+      const P = window.atodPrice(done);
+      window.atodTrack('purchase', { value: P.total, currency: 'ILS', num_items: P.units });
     }
     try { localStorage.removeItem(KEY); } catch {}
     $$('.cart__count').forEach(b => { b.textContent = '0'; b.dataset.empty = 'true'; });
@@ -651,27 +701,31 @@
 
   form.action = ENDPOINT;
 
-  const sub   = cart.reduce((s, l) => s + l.price * l.qty, 0);
-  const units = cart.reduce((s, l) => s + l.qty, 0);
-  const ship  = units >= 2 ? 0 : 50;
+  const P = window.atodPrice(cart);
 
   $('#co-lines').innerHTML = cart.map(l =>
     '<div class="line"><img src="' + l.img + '" alt="" loading="lazy"><div>' +
     '<div class="line__n">' + l.name + '</div>' +
     '<div class="line__p">' + l.qty + ' × ' + ILS(l.price) + '</div>' +
     '</div></div>').join('');
-  $('#co-sub').textContent   = ILS(sub);
-  $('#co-ship').textContent  = ship ? ILS(ship) : 'חינם';
-  $('#co-total').textContent = ILS(sub + ship);
-  $('#co-hint').textContent  = units >= 2
-    ? 'משלוח חינם — שני פריטים ומעלה'
-    : 'הוספת פריט נוסף מזכה במשלוח חינם';
+  $('#co-sub').textContent   = ILS(P.sub);
+  if (P.disc) {
+    const r = document.createElement('div');
+    r.className = 'totals totals--sm';
+    r.innerHTML = '<span>' + P.label + '</span><span>−' + ILS(P.disc) + '</span>';
+    $('#co-sub').parentElement.after(r);
+  }
+  $('#co-ship').textContent  = P.ship ? ILS(P.ship) : 'חינם';
+  $('#co-total').textContent = ILS(P.total);
+  $('#co-hint').textContent  = P.sale ? 'בלאק פריידי: 25% על הגוף הראשון, 30% על כל גוף נוסף, משלוח חינם'
+    : P.units >= 2 ? 'משלוח חינם — שני פריטים ומעלה' : 'הוספת פריט נוסף מזכה במשלוח חינם';
 
   /* Grow מסנן תווים מיוחדים מתיאור המוצר */
   $('#c-items').value  = cart.map(l => l.name + ' ' + l.qty + ' יח').join(', ')
-                         + (ship ? ', משלוח 50' : '');
-  $('#c-units').value  = units;
-  $('#c-amount').value = (sub + ship).toFixed(2);
+                         + (P.disc ? ', הנחה ' + P.disc : '')
+                         + (P.ship ? ', משלוח 50' : '');
+  $('#c-units').value  = P.units;
+  $('#c-amount').value = P.total.toFixed(2);
 
   if (new URLSearchParams(location.search).get('cancelled') === '1') {
     const n = $('#pay-cancelled'); if (n) n.hidden = false;
