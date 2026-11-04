@@ -906,3 +906,8 @@ body[data-consent-open] .a11y{bottom:calc(16px + var(--consent-h,96px))}
   .consent__btns{justify-content:stretch}
   .consent__btns button{flex:1}
 }
+
+/* קישור שקט לוואטסאפ, בעמוד מוצר ובתשלום */
+.wa-ask{display:block;margin-top:14px;font-size:13px;color:rgba(46,37,31,.68);
+  text-decoration:underline;text-underline-offset:3px}
+.wa-ask:hover{color:rgba(46,37,31,1)}

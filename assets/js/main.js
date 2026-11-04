@@ -432,7 +432,7 @@
   const ON0 = has(GA) || has(CLARITY) || has(META);
 
   /* שמות האירועים של GA4 ← השמות הסטנדרטיים של מטא */
-  const FB = { view_item: 'ViewContent', add_to_cart: 'AddToCart',
+  const FB = { contact_whatsapp: 'Contact', view_item: 'ViewContent', add_to_cart: 'AddToCart',
                begin_checkout: 'InitiateCheckout', purchase: 'Purchase' };
 
   const KEY = 'atod_consent_v1';
@@ -959,4 +959,30 @@ html{-webkit-tap-highlight-color:transparent}
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
+})();
+
+/* ---------- שאלה בוואטסאפ ----------
+   רק בעמודי מוצר ובעמוד התשלום: שם מישהו כבר שוקל לקנות.
+   ההודעה נפתחת עם שם הדגם, כדי שיהיה ברור על מה שואלים. */
+(() => {
+  'use strict';
+  const PHONE = '972504922482';
+  const link = (text, msg) => {
+    const a = document.createElement('a');
+    a.className = 'wa-ask';
+    a.href = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(msg);
+    a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = text;
+    a.addEventListener('click', () => window.atodTrack && window.atodTrack('contact_whatsapp'));
+    return a;
+  };
+
+  const cta  = document.querySelector('.pdp__cta[data-add]');
+  const meta = document.querySelector('.pdp__meta');
+  if (cta && meta) meta.after(link('שאלה לפני שמזמינים? כתבו לי בוואטסאפ',
+    'היי, יש לי שאלה על ' + cta.dataset.name));
+
+  const send = document.getElementById('c-submit');
+  if (send) send.after(link('שאלה לפני התשלום? כתבו לי בוואטסאפ',
+    'היי, יש לי שאלה לפני שאני משלם על ההזמנה'));
 })();
