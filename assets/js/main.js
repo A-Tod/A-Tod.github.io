@@ -426,9 +426,14 @@
 (function () {
   const GA      = 'G-6R01MNSJWQ'; // Google Analytics 4  (Measurement ID · נכס studioatod, חשבון A-tod)
   const CLARITY = 'REPLACE';       // Microsoft Clarity   (Project ID)
+  const META    = '2179975309541757'; // Meta Pixel (Dataset "A-Tod Website" · עסק a___tod)
 
   const has = v => v && !/REPLACE/.test(v);
-  const ON0 = has(GA) || has(CLARITY);
+  const ON0 = has(GA) || has(CLARITY) || has(META);
+
+  /* שמות האירועים של GA4 ← השמות הסטנדרטיים של מטא */
+  const FB = { view_item: 'ViewContent', add_to_cart: 'AddToCart',
+               begin_checkout: 'InitiateCheckout', purchase: 'Purchase' };
 
   const KEY = 'atod_consent_v1';
   const get = () => { try { return localStorage.getItem(KEY); } catch { return null; } };
@@ -457,6 +462,16 @@
     if (!loaded) { queue.push([name, params]); return; }
     try { window.gtag && window.gtag('event', name, params || {}); } catch {}
     try { window.clarity && window.clarity('event', name); } catch {}
+    try {
+      if (window.fbq && FB[name]) {
+        const p = params || {}, d = {};
+        if (p.value != null) { d.value = +p.value; d.currency = p.currency || 'ILS'; }
+        if (p.item_id) { d.content_ids = [p.item_id]; d.content_type = 'product'; }
+        if (p.item_name) d.content_name = p.item_name;
+        if (p.num_items) d.num_items = p.num_items;
+        window.fbq('track', FB[name], d);
+      }
+    } catch {}
   };
 
   function loadScripts() {
@@ -472,6 +487,18 @@
       window.gtag = function () { window.dataLayer.push(arguments); };
       gtag('js', new Date());
       gtag('config', GA, { anonymize_ip: true });
+    }
+
+    if (has(META)) {
+      (function (f, b, e, v, n, t, sc) {
+        if (f.fbq) return; n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+        if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
+        t = b.createElement(e); t.async = !0; t.src = v;
+        sc = b.getElementsByTagName(e)[0]; sc.parentNode.insertBefore(t, sc);
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', META);
+      fbq('track', 'PageView');
     }
 
     if (has(CLARITY)) {
@@ -495,9 +522,10 @@
     banner.innerHTML =
       '<p class="consent__t">אנחנו רוצים להבין איך משתמשים באתר כדי לשפר אותו. ' +
       'לשם כך נשתמש בעוגיות של ' +
-      (has(GA) && has(CLARITY) ? 'Google Analytics ושל Microsoft Clarity, שמקליט את המסך בזמן הגלישה'
-        : has(CLARITY) ? 'Microsoft Clarity, שמקליט את המסך בזמן הגלישה'
-        : 'Google Analytics') + '. ' +
+      [has(GA) && 'Google Analytics',
+       has(META) && 'Meta (פייסבוק ואינסטגרם)',
+       has(CLARITY) && 'Microsoft Clarity, שמקליט את המסך בזמן הגלישה']
+        .filter(Boolean).join(', ') + '. ' +
       'בלי הסכמתכם לא ייטען דבר. פרטים ב<a href="privacy.html">מדיניות הפרטיות</a>.</p>' +
       '<div class="consent__btns">' +
       '<button type="button" class="consent__ok">אני מאשר</button>' +
@@ -602,6 +630,15 @@
 
   /* חזרה מתשלום מוצלח — מרוקנים את העגלה */
   if (/thank-you\.html$/.test(location.pathname)) {
+    /* רכישה: נמדדת פעם אחת, מתוכן העגלה לפני שהיא מתרוקנת.
+       רענון של העמוד מוצא עגלה ריקה ולא סופר שוב. */
+    const done = readCart();
+    if (done.length && window.atodTrack) {
+      const units = done.reduce((s, l) => s + l.qty, 0);
+      const sub   = done.reduce((s, l) => s + l.price * l.qty, 0);
+      window.atodTrack('purchase', { value: sub + (units >= 2 ? 0 : 50),
+        currency: 'ILS', num_items: units });
+    }
     try { localStorage.removeItem(KEY); } catch {}
     $$('.cart__count').forEach(b => { b.textContent = '0'; b.dataset.empty = 'true'; });
   }
