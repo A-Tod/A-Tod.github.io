@@ -82,6 +82,8 @@
       consentAt: now,
       source,                 // 'popup' | 'product page'
       models,                 // [{id,name,url}] — הרשימה המצטברת
+      modelsText: models.map(m => m.name).join(', '),          // לשימוש ישיר במייל
+      modelsLinks: models.map(m => m.name + ': ' + m.url).join('\n'),
       ts: now
     };
   }
