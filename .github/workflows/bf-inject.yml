@@ -1,0 +1,40 @@
+name: bf-inject
+on:
+  push:
+    branches: [blackfriday-2026]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add campaign script tag and bump stylesheet version
+        run: |
+          python3 - <<PYEOF
+          import re, glob, io
+          TAG = chr(60) + 'script src="assets/js/blackfriday.js?v1"' + chr(62) + chr(60) + '/script' + chr(62)
+          MAIN = re.compile(r'(<script src="assets/js/main\.js\?v\d+"></script>)')
+          CSSV = re.compile(r'(assets/css/style\.css\?v)(\d+)')
+          changed = 0
+          for path in sorted(glob.glob("*.html")):
+              txt = io.open(path, encoding="utf-8").read()
+              new = txt
+              if "assets/js/blackfriday.js" not in new:
+                  new = MAIN.sub(lambda m: m.group(1) + "\n  " + TAG, new, count=1)
+              new = CSSV.sub(lambda m: m.group(1) + str(int(m.group(2)) + 1), new)
+              if new != txt:
+                  io.open(path, "w", encoding="utf-8").write(new)
+                  changed += 1
+          print("files changed:", changed)
+          PYEOF
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "Black Friday 2026: wire campaign script into pages"
+            git push
+          fi
