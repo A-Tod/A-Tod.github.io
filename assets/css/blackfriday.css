@@ -225,7 +225,10 @@
    כמחזיקת הטוקנים של בלוק ההרשמה בדף המוצר — הסגנון עצמו לא שונה.
    הפונטים Heebo ו-Jost כבר נטענים בכל עמודי האתר, ולכן אין link נוסף.  */
 .bf-hero{
-  position:relative; overflow:hidden; isolation:isolate; direction:rtl; text-align:center;
+  /* נשאר על המסך בזמן גלילה, צמוד מתחת להדר הדביק של האתר.
+     --header-h מוגדר בגיליון הראשי ומתעדכן לבד במובייל.          */
+  position:sticky; top:var(--header-h, 0px); z-index:90;
+  overflow:hidden; isolation:isolate; direction:rtl; text-align:center;
   background:#d9d6cf; color:#141414; font-family:'Heebo',system-ui,sans-serif;
   padding:clamp(36px,5vw,68px) clamp(18px,5vw,60px);
 }
