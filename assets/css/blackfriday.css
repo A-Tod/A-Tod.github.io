@@ -226,11 +226,17 @@
    הפונטים Heebo ו-Jost כבר נטענים בכל עמודי האתר, ולכן אין link נוסף.  */
 .bf-hero{
   /* נשאר על המסך בזמן גלילה, צמוד מתחת להדר הדביק של האתר.
-     --header-h מוגדר בגיליון הראשי ומתעדכן לבד במובייל.          */
+     --header-h מוגדר בגיליון הראשי ומתעדכן לבד במובייל.
+     --bf-p הוא התקדמות הגלילה: 0 = באנר מלא, 1 = פס דק.
+     הסקריפט מעדכן אותו, וכל המידות נגזרות ממנו בחישוב.            */
+  --bf-p:0;
+  --bf-pad-full:clamp(36px,5vw,68px);
+  --bf-pad-min:11px;
   position:sticky; top:var(--header-h, 0px); z-index:90;
   overflow:hidden; isolation:isolate; direction:rtl; text-align:center;
   background:#d9d6cf; color:#141414; font-family:'Heebo',system-ui,sans-serif;
-  padding:clamp(36px,5vw,68px) clamp(18px,5vw,60px);
+  padding-inline:clamp(18px,5vw,60px);
+  padding-block:calc(var(--bf-pad-full) + (var(--bf-pad-min) - var(--bf-pad-full)) * var(--bf-p));
 }
 .bf-hero *{box-sizing:border-box}
 .bf-hero::before{
@@ -245,23 +251,30 @@
 }
 .bf-hero__inner{max-width:1280px; margin:0 auto}
 .bf-hero__title{
+  --bf-fs-full:clamp(26px,6.6vw,96px);
+  --bf-fs-min:19px;
   display:flex; align-items:center; justify-content:center;
   gap:clamp(14px,2.6vw,40px); direction:ltr; margin:0 auto; max-width:1100px;
   font:500 clamp(26px,6.6vw,96px)/1 'Jost',sans-serif; letter-spacing:.3em; color:#141414;
+  font-size:calc(var(--bf-fs-full) + (var(--bf-fs-min) - var(--bf-fs-full)) * var(--bf-p));
 }
 .bf-hero__title::before,.bf-hero__title::after{
   content:""; flex:1 1 0; min-width:12px; height:2px; background:currentColor; opacity:.75;
 }
 .bf-hero__title span{white-space:nowrap; margin-right:-.3em}
 .bf-hero__text{
-  margin:clamp(22px,2.6vw,36px) auto 0; max-width:760px;
+  margin:0 auto; max-width:760px;
+  margin-block-start:calc(clamp(22px,2.6vw,36px) * (1 - var(--bf-p)));
+  max-height:calc(140px * (1 - var(--bf-p)));
+  opacity:clamp(0, calc(1 - var(--bf-p) * 1.8), 1);
+  overflow:hidden;
   font-size:clamp(16px,1.5vw,21px); line-height:1.65; font-weight:400; color:#2b2b2b;
 }
 @media (max-width:480px){
-  .bf-hero{padding:40px 20px 38px}
+  .bf-hero{--bf-pad-full:39px; --bf-pad-min:9px; padding-inline:20px}
   /* במסך קטן האותיות דקות מדי במשקל 500, ולכן 600 כדי שייראו
      עבות כמו בגרסת המחשב. המשקל נוסף לבקשת הפונטים בעמוד.      */
-  .bf-hero__title{font-size:7vw; font-weight:600; letter-spacing:.2em; gap:10px}
+  .bf-hero__title{--bf-fs-full:7vw; --bf-fs-min:17px; font-weight:600; letter-spacing:.2em; gap:10px}
   .bf-hero__title span{margin-right:-.2em}
   .bf-hero__text{font-size:17px}
 }
