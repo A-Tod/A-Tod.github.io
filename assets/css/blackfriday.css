@@ -1,0 +1,205 @@
+/* ===== Black Friday 2026 — באנר inline ================================= */
+/* נספח עצמאי. אין תלות בשאר הגיליון ואין דריסה של כללים קיימים.          */
+/* לבן ואפור בלבד.                                                        */
+
+.bf{
+  --bf-white:#FFFFFF;
+  --bf-paper:#F7F7F5;
+  --bf-box:#EDEDEA;
+  --bf-line:#DCDCD8;
+  --bf-mute:#8A8A86;
+  --bf-text:#4A4A47;
+  --bf-ink:#2F2F2D;
+  --bf-r:12px;
+  --bf-r-s:9px;
+  font-family:var(--f-ui,"Assistant","Heebo",system-ui,sans-serif);
+  color:var(--bf-text);
+}
+
+/* ---------- הבאנר ---------- */
+.bf-banner{
+  background:var(--bf-paper);
+  border:1px solid var(--bf-line);
+  border-radius:var(--bf-r);
+  padding:34px 28px 28px;
+  margin:0 0 30px;
+  text-align:center;
+}
+@media (max-width:620px){
+  .bf-banner{padding:26px 18px 22px; margin-bottom:22px; border-radius:var(--bf-r)}
+}
+
+.bf-kicker{
+  margin:0 0 18px;
+  font-family:"Jost",var(--f-ui,sans-serif);
+  font-weight:600; letter-spacing:.06em;
+  font-size:34px; line-height:1.1;
+  color:var(--bf-ink);
+  direction:ltr; unicode-bidi:isolate;
+}
+.bf-h{
+  margin:0 0 20px;
+  font-weight:400; font-size:25px; line-height:1.35;
+  color:var(--bf-ink);
+  text-wrap:balance;
+}
+.bf-perks{
+  display:inline-block;
+  background:var(--bf-white);
+  border:1px solid var(--bf-line);
+  border-radius:var(--bf-r-s);
+  padding:14px 22px;
+  margin:0 0 20px;
+  font-size:15px; line-height:1.9;
+}
+.bf-perks span{display:block}
+.bf-p{
+  margin:0 0 22px;
+  font-size:15px; line-height:1.75;
+  text-wrap:balance;
+}
+@media (max-width:620px){
+  .bf-kicker{font-size:28px; margin-bottom:14px}
+  .bf-h{font-size:21px; margin-bottom:16px}
+  .bf-perks{display:block; padding:13px 14px; font-size:14.5px}
+  .bf-p{font-size:14.5px; margin-bottom:18px}
+}
+
+/* ---------- כפתורים ---------- */
+.bf-btn{
+  display:inline-block; width:100%; max-width:340px;
+  box-sizing:border-box;
+  padding:15px 22px;
+  background:var(--bf-ink); color:var(--bf-white);
+  border:1px solid var(--bf-ink); border-radius:var(--bf-r-s);
+  font:inherit; font-size:16px; text-align:center; text-decoration:none;
+  cursor:pointer;
+  transition:opacity .18s ease;
+}
+.bf-btn:hover{opacity:.88}
+.bf-btn[disabled]{opacity:.5; cursor:default}
+.bf-btn--quiet{
+  background:var(--bf-white); color:var(--bf-ink);
+  border-color:var(--bf-line);
+}
+.bf-btn--quiet:hover{background:var(--bf-box); opacity:1}
+
+/* ---------- הרשמה כללית בתחתית הבאנר ---------- */
+.bf-sub{
+  margin:26px auto 0; max-width:440px;
+  padding:20px 0 0;
+  border-top:1px solid var(--bf-line);
+  text-align:start;
+}
+.bf-sub .bf-lead{
+  margin:0 0 14px;
+  font-size:14.5px; line-height:1.65;
+  text-align:center;
+}
+@media (max-width:620px){ .bf-sub{margin-top:20px} }
+
+/* ---------- טופס ---------- */
+.bf-row{display:flex; gap:9px; margin:0 0 12px}
+.bf-row .bf-btn{width:auto; max-width:none; flex:none; white-space:nowrap; font-size:15px; padding:13px 18px}
+@media (max-width:560px){
+  .bf-row{display:block}
+  .bf-row .bf-btn{width:100%; max-width:none; margin-top:9px}
+}
+.bf-input{
+  flex:1 1 auto; width:100%; min-width:0;
+  box-sizing:border-box;
+  padding:13px 14px;
+  background:var(--bf-white);
+  border:1px solid var(--bf-line);
+  border-radius:var(--bf-r-s);
+  font:inherit; font-size:15px; color:var(--bf-ink);
+}
+.bf-input::placeholder{color:var(--bf-mute)}
+.bf-input[aria-invalid="true"]{border-color:#9A6A64; background:#FBF4F3}
+
+.bf-consent{
+  display:flex; align-items:flex-start; gap:8px;
+  margin:0 0 4px;
+  font-size:13px; line-height:1.6; color:var(--bf-text);
+}
+.bf-consent input{
+  flex:none; width:16px; height:16px; margin-top:2px;
+  accent-color:var(--bf-ink); cursor:pointer;
+}
+.bf-consent label{cursor:pointer}
+.bf-consent a{color:inherit; text-decoration:underline; text-underline-offset:2px}
+
+.bf-note{
+  margin:10px 0 0;
+  font-size:12.5px; line-height:1.6; color:var(--bf-mute);
+}
+
+/* ---------- הודעות ---------- */
+.bf-msg{
+  margin:12px 0 0;
+  padding:13px 15px;
+  border-radius:var(--bf-r-s);
+  font-size:14.5px; line-height:1.65;
+  text-wrap:balance;
+}
+.bf-msg[hidden]{display:none}
+.bf-msg--ok{background:var(--bf-box); color:var(--bf-ink)}
+.bf-msg--err{background:#F7EFEE; color:#7E4A44; border:1px solid #E2CFCC}
+
+/* ---------- סינון ---------- */
+.bf-filters{
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin:0 0 22px;
+  justify-content:center;
+}
+.bf-chip{
+  padding:9px 17px;
+  background:var(--bf-white);
+  border:1px solid var(--bf-line);
+  border-radius:999px;
+  font:inherit; font-size:14.5px; color:var(--bf-text);
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.bf-chip:hover{background:var(--bf-box)}
+.bf-chip[aria-pressed="true"]{
+  background:var(--bf-ink); color:var(--bf-white); border-color:var(--bf-ink);
+}
+@media (max-width:620px){
+  .bf-filters{gap:7px; margin-bottom:18px}
+  .bf-chip{padding:8px 14px; font-size:14px}
+}
+.bf-count{
+  margin:0 0 18px;
+  font-size:13px; text-align:center; color:var(--bf-mute);
+}
+
+/* ---------- אזור ההרשמה בדף מוצר ---------- */
+.bf-pdp{
+  margin:22px 0 0;
+  padding:20px 20px 18px;
+  background:var(--bf-paper);
+  border:1px solid var(--bf-line);
+  border-radius:var(--bf-r);
+}
+.bf-pdp .bf-h2{
+  margin:0 0 6px;
+  font-size:17px; font-weight:500; line-height:1.4; color:var(--bf-ink);
+}
+.bf-pdp .bf-lead{
+  margin:0 0 14px;
+  font-size:14.5px; line-height:1.65;
+}
+@media (max-width:620px){
+  .bf-pdp{padding:17px 15px 15px}
+}
+
+/* ---------- פוקוס ---------- */
+.bf :focus-visible{outline:2px solid var(--bf-ink); outline-offset:2px; border-radius:6px}
+
+/* ---------- נגישות ---------- */
+.bf-sr{
+  position:absolute; width:1px; height:1px;
+  padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
