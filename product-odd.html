@@ -23,6 +23,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;700&family=Assistant:wght@200;300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v54">
+  <link rel="stylesheet" href="assets/css/blackfriday.css?v1">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Odd", "sku": "ATD-OD-150", "description": "Odd היא מנורת תקרה תלויה המפיצה אור רך ואחיד המתפזר בנוחות ברחבי החלל. העיצוב הרחב שלה הופך אותה למתאימה במיוחד להצבה מעל איי מטבח, מזנונים או אזורי אוכל. האור שהיא יוצרת חמים ומזמין, ותורם לאווירה נעימה ברגעים של היומיום. צורתה הנקייה משתלבת בטבעיות בעיצובים מודרניים ומינימליסטיים. מנורה זו מביאה שילוב של פונקציונליות ויופי רגוע לכל חלל שבו היא תלויה.", "image": ["assets/img/177757_8f2b36f360ce4fa0abd96aa516981f3e.jpg", "assets/img/177757_8b68a568b1e6436cbe9fda6d7d119d0c.jpg"], "brand": {"@type": "Brand", "name": "a-tod"}, "offers": {"@type": "Offer", "price": 950, "priceCurrency": "ILS", "availability": "https://schema.org/InStock"}}</script>
 <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 </head>
@@ -95,7 +96,26 @@
         </button>
       </div>
 
-      <div class="pdp__meta">
+      
+<div class="bf bf-pdp">
+  <h2 class="bf-h2">זה הגוף שבחרתם?</h2>
+  <p class="bf-lead">קבלו תזכורת עם קישור ישיר לדגם כשהמבצע נפתח.</p>
+  <form data-bf-form="product page" data-model-id="odd" data-model-name="Odd" data-model-url="https://studioatod.com/product-odd.html" novalidate>
+    <div class="bf-row">
+      <label class="bf-sr" for="bf-pmail">כתובת המייל</label>
+      <input class="bf-input" id="bf-pmail" type="email" inputmode="email" autocomplete="email" placeholder="כתובת המייל">
+      <button type="submit" class="bf-btn">תזכירו לי על הדגם הזה</button>
+    </div>
+    <div class="bf-consent">
+      <input type="checkbox" id="bf-pok">
+      <label for="bf-pok">אני מאשר/ת קבלת תזכורת במייל על המבצע · <a href="privacy.html">מדיניות הפרטיות</a></label>
+    </div>
+  </form>
+  <p class="bf-msg" data-bf-msg role="status" hidden></p>
+  <p class="bf-note">ההרשמה היא לתזכורת על המבצע בלבד ולא לרשימת דיוור. הגופים מיוצרים לפי הזמנה; ההרשמה אינה הזמנה.</p>
+</div>
+
+<div class="pdp__meta">
         <span>משלוח חינם משני פריטים</span>
       </div>
     </div>
@@ -308,5 +328,6 @@
   </div>
 </div>
 <script src="assets/js/main.js?v56"></script>
+  <script src="assets/js/blackfriday.js?v1"></script>
 </body>
 </html>

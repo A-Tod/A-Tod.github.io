@@ -1,0 +1,221 @@
+/* ===== Black Friday 2026 — STONE v10, במיקום inline ====================
+   העיצוב מהמוקאפים של רועי. הבאנר הוא חלק מהעמוד ולא חלון קופץ.
+   נספח עצמאי: אין תלות בשאר הגיליון ואין דריסה של כללים קיימים.
+   ======================================================================== */
+
+.bf{
+  --bf-card:#FAFAF7;
+  --bf-box:#ECEEE9;
+  --bf-btn:#626964;
+  --bf-head:#626964;
+  --bf-text:#4F5551;
+  --bf-mute:#8B918C;
+  --bf-line:#E1E4DF;
+  --bf-rule:#D9DED7;
+  --bf-white:#FFFFFF;
+  --bf-r-card:14px;
+  --bf-r-ctl:10px;
+  font-family:var(--f-ui,"Assistant","Heebo",system-ui,sans-serif);
+  color:var(--bf-text);
+}
+
+/* ---------- הבאנר ---------- */
+.bf-banner{
+  max-width:620px;
+  margin:0 auto 26px;
+  background:var(--bf-card);
+  border:1px solid var(--bf-line);
+  border-radius:var(--bf-r-card);
+  box-shadow:0 10px 30px rgba(79,85,81,.06);
+  padding:38px 34px 32px;
+  text-align:center;
+}
+@media (max-width:620px){
+  .bf-banner{padding:28px 20px 24px; margin-bottom:20px}
+}
+
+/* ---------- טיפוגרפיה ---------- */
+.bf-kicker{
+  margin:0 0 20px;
+  font-family:"Jost",var(--f-ui,sans-serif);
+  font-weight:600; letter-spacing:.055em;
+  font-size:36px; line-height:1.1;
+  color:var(--bf-head);
+  direction:ltr; unicode-bidi:isolate;
+}
+.bf-h{
+  margin:0 0 22px;
+  font-weight:400; font-size:25px; line-height:1.38;
+  color:var(--bf-head);
+  text-wrap:balance;
+}
+.bf-p{
+  margin:0 0 22px;
+  font-size:15px; line-height:1.72;
+  color:var(--bf-text);
+  text-wrap:balance;
+}
+@media (max-width:620px){
+  .bf-kicker{font-size:30px; margin-bottom:16px}
+  .bf-h{font-size:22px; margin-bottom:18px}
+  .bf-p{font-size:14.5px; margin-bottom:18px}
+}
+
+/* ---------- תיבת ההטבות ---------- */
+.bf-perks{
+  display:block;
+  background:var(--bf-box);
+  border-radius:var(--bf-r-ctl);
+  padding:16px 18px;
+  margin:0 0 22px;
+  font-size:15px; line-height:1.95;
+  color:var(--bf-text);
+}
+.bf-perks span{display:block}
+@media (max-width:620px){ .bf-perks{font-size:14.5px; padding:14px 14px} }
+
+/* ---------- כפתורים ---------- */
+.bf-btn{
+  display:block; width:100%; box-sizing:border-box;
+  padding:15px 18px;
+  background:var(--bf-btn); color:#fff;
+  border:1px solid var(--bf-btn); border-radius:var(--bf-r-ctl);
+  font:inherit; font-size:16px; text-align:center; text-decoration:none;
+  cursor:pointer;
+  transition:opacity .18s ease;
+}
+.bf-btn:hover{opacity:.9}
+.bf-btn[disabled]{opacity:.55; cursor:default}
+
+/* ---------- הרשמה כללית בתחתית הבאנר ---------- */
+.bf-sub{
+  margin:26px 0 0;
+  padding:22px 0 0;
+  border-top:1px solid var(--bf-rule);
+}
+.bf-sub .bf-lead{
+  margin:0 0 16px;
+  font-size:14.5px; line-height:1.7;
+  color:var(--bf-text);
+  text-align:center;
+  text-wrap:balance;
+}
+
+/* ---------- טופס ----------
+   סדר המוקאפ: שדה → הסכמה → כפתור. ה-HTML עוטף את השדה והכפתור ב-.bf-row,
+   ולכן .bf-row נעשה display:contents והילדים מסודרים ב-order.              */
+.bf form{display:flex; flex-direction:column}
+.bf-row{display:contents}
+.bf form .bf-input{order:1; margin:0 0 14px}
+.bf form .bf-consent{order:2}
+.bf form .bf-btn{order:3}
+.bf-input{
+  display:block; width:100%; box-sizing:border-box;
+  padding:14px 15px;
+  background:var(--bf-box);
+  border:1px solid transparent;
+  border-radius:var(--bf-r-ctl);
+  font:inherit; font-size:15px; color:var(--bf-text);
+}
+.bf-input::placeholder{color:var(--bf-mute)}
+.bf-input[aria-invalid="true"]{border-color:#A6564F; background:#F6ECEB}
+
+.bf-consent{
+  display:flex; align-items:flex-start; gap:9px;
+  margin:0 0 16px;
+  font-size:13.5px; line-height:1.6;
+  color:var(--bf-text);
+  text-align:start;
+}
+.bf-consent input{
+  flex:none; width:17px; height:17px; margin-top:2px;
+  accent-color:var(--bf-btn); cursor:pointer;
+}
+.bf-consent label{cursor:pointer}
+.bf-consent a{color:inherit; text-decoration:underline; text-underline-offset:2px}
+
+.bf-note{
+  margin:14px 0 0;
+  font-size:12.5px; line-height:1.65; color:var(--bf-mute);
+  text-align:center;
+  text-wrap:balance;
+}
+
+/* ---------- הודעות ---------- */
+.bf-msg{
+  margin:14px 0 0;
+  padding:15px 16px;
+  border-radius:var(--bf-r-ctl);
+  font-size:14.5px; line-height:1.7;
+  text-align:center;
+  text-wrap:balance;
+}
+.bf-msg[hidden]{display:none}
+.bf-msg--ok{background:var(--bf-box); color:var(--bf-text)}
+.bf-msg--err{background:#F6ECEB; color:#8E463F}
+
+/* ---------- סינון ---------- */
+.bf-filters{
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin:0 0 20px;
+  justify-content:center;
+}
+.bf-chip{
+  padding:9px 18px;
+  background:var(--bf-card);
+  border:1px solid var(--bf-line);
+  border-radius:999px;
+  font:inherit; font-size:14.5px; color:var(--bf-text);
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.bf-chip:hover{background:var(--bf-box)}
+.bf-chip[aria-pressed="true"]{
+  background:var(--bf-btn); color:#fff; border-color:var(--bf-btn);
+}
+@media (max-width:620px){
+  .bf-filters{gap:7px; margin-bottom:16px}
+  .bf-chip{padding:8px 15px; font-size:14px}
+}
+.bf-count{
+  margin:0 0 18px;
+  font-size:13px; text-align:center; color:var(--bf-mute);
+}
+
+/* ---------- אזור ההרשמה בדף מוצר ---------- */
+.bf-pdp{
+  margin:22px 0 0;
+  padding:24px 22px 20px;
+  background:var(--bf-card);
+  border:1px solid var(--bf-line);
+  border-radius:var(--bf-r-card);
+  text-align:center;
+}
+.bf-pdp .bf-h2{
+  margin:0 0 8px;
+  font-size:19px; font-weight:400; line-height:1.4; color:var(--bf-head);
+}
+.bf-pdp .bf-lead{
+  margin:0 0 18px;
+  font-size:14.5px; line-height:1.7; color:var(--bf-text);
+  text-wrap:balance;
+}
+@media (max-width:620px){
+  .bf-pdp{padding:20px 16px 17px}
+  .bf-pdp .bf-h2{font-size:18px}
+}
+
+/* ---------- פוקוס ---------- */
+.bf :focus-visible{outline:2px solid var(--bf-btn); outline-offset:2px; border-radius:6px}
+
+/* ---------- נגישות ---------- */
+.bf-sr{
+  position:absolute; width:1px; height:1px;
+  padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ---------- תנועה מופחתת ---------- */
+@media (prefers-reduced-motion:reduce){
+  .bf-btn,.bf-chip{transition:none}
+}
