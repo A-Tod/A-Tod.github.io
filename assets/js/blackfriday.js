@@ -12,7 +12,10 @@
   'use strict';
 
   /* ---------- הגדרות ---------- */
-  const ENDPOINT = '';            // ← כתובת ה-webhook מ-Make. ריק = הטפסים מושבתים.
+  // כתובת ה-webhook של Make. היא גלויה בקוד המקור של האתר — זה בלתי נמנע
+  // בטופס שרץ בדפדפן. היא יודעת רק להוסיף שורה לגיליון, ואפשר להחליף אותה
+  // ב-Make בכל רגע. ריק = הטפסים מושבתים.
+  const ENDPOINT = 'https://hook.eu2.make.com/y76so83sptz4iv3wei11vr9pkn3hknnq';
   const CAMPAIGN = 'bf2026';
   const CONSENT_VERSION = 'v11';
   const CONSENT_TEXT =
