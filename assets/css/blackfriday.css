@@ -251,3 +251,9 @@
   .bf-strip__h{font-size:14.5px}
   .bf-strip__p{font-size:13.5px}
 }
+/* במסך רחב הפס עצמו רחב, ולכן הטקסט צריך לגדול איתו */
+@media (min-width:900px){
+  .bf-strip{padding:20px 24px; margin-bottom:30px}
+  .bf-strip__h{font-size:21px; margin-bottom:5px}
+  .bf-strip__p{font-size:17px}
+}
