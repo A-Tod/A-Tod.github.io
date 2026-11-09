@@ -183,18 +183,37 @@
   function wireShrink(){
     const hero = document.querySelector('.bf-hero');
     if(!hero) return;
-    const RANGE = 220;
+
+    /* הבאנר דביק, ולכן כשהוא מתכווץ גובה העמוד מתקצר והתוכן עולה.
+       אם הוא מתכווץ מהר יותר מקצב הגלילה, הדפדפן מושך את הגלילה אחורה
+       והבאנר "נתקע". לכן טווח הגלילה חייב להיות גדול מהפרש הגבהים —
+       מודדים אותו בפועל ומכפילים, במקום לנחש מספר קבוע.              */
+    let range = 220;
+    function measure(){
+      const before = hero.style.getPropertyValue('--bf-p');
+      hero.style.setProperty('--bf-p', '0');
+      const full = hero.getBoundingClientRect().height;
+      hero.style.setProperty('--bf-p', '1');
+      const min = hero.getBoundingClientRect().height;
+      hero.style.setProperty('--bf-p', before || '0');
+      range = Math.max(180, Math.round((full - min) * 1.8));
+    }
+
     let queued = 0;
     function update(){
       queued = 0;
-      const p = Math.min(1, Math.max(0, window.scrollY / RANGE));
+      const p = Math.min(1, Math.max(0, window.scrollY / range));
       hero.style.setProperty('--bf-p', p.toFixed(3));
     }
+    function remeasure(){ measure(); update(); }
+
+    measure();
+    update();
     window.addEventListener('scroll', () => {
       if(!queued) queued = requestAnimationFrame(update);
     }, {passive:true});
-    window.addEventListener('resize', update, {passive:true});
-    update();
+    window.addEventListener('resize', remeasure, {passive:true});
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
   }
 
   /* ---------- הפעלה ---------- */
