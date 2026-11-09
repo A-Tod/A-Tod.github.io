@@ -219,3 +219,30 @@
 @media (prefers-reduced-motion:reduce){
   .bf-btn,.bf-chip{transition:none}
 }
+
+/* ---------- פס ההסבר בעמוד הדגמים ----------
+   קומפקטי בכוונה: המוצרים צריכים להופיע מוקדם בגלילה.              */
+.bf-strip{
+  background:#EFEFEE;
+  border:1px solid #E2E2E0;
+  border-radius:var(--bf-r-ctl);
+  padding:13px 18px;
+  margin:0 0 20px;
+  text-align:center;
+}
+.bf-strip__h{
+  margin:0 0 3px;
+  font-size:15px; font-weight:500; line-height:1.4;
+  color:#3D413E;
+}
+.bf-strip__p{
+  margin:0;
+  font-size:14px; line-height:1.6;
+  color:#565956;
+  text-wrap:balance;
+}
+@media (max-width:620px){
+  .bf-strip{padding:12px 14px; margin-bottom:16px}
+  .bf-strip__h{font-size:14.5px}
+  .bf-strip__p{font-size:13.5px}
+}
