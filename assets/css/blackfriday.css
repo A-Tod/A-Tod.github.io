@@ -256,7 +256,9 @@
 }
 @media (max-width:480px){
   .bf-hero{padding:40px 20px 38px}
-  .bf-hero__title{font-size:7vw; letter-spacing:.2em; gap:10px}
+  /* במסך קטן האותיות דקות מדי במשקל 500, ולכן 600 כדי שייראו
+     עבות כמו בגרסת המחשב. המשקל נוסף לבקשת הפונטים בעמוד.      */
+  .bf-hero__title{font-size:7vw; font-weight:600; letter-spacing:.2em; gap:10px}
   .bf-hero__title span{margin-right:-.2em}
   .bf-hero__text{font-size:17px}
 }
