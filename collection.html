@@ -25,6 +25,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;700&family=Assistant:wght@200;300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v55">
+  <link rel="stylesheet" href="assets/css/blackfriday.css?v1">
 </head>
 <body>
 <a class="skip-link" href="#main">דילוג לתוכן הראשי</a>
@@ -72,85 +73,123 @@
   <div class="wrap"><header class="pagehead">
     <h1>כל הדגמים</h1>
   </header></div>
-<div class="wrap"><div class="grid-products">
-      <a class="card" href="product-holo.html">
+<div class="wrap">
+<section class="bf" aria-labelledby="bf-title">
+  <div class="bf-banner">
+    <p class="bf-kicker">BLACK FRIDAY</p>
+    <h2 class="bf-h" id="bf-title">איזה גוף תאורה ייכנס אליכם הביתה?</h2>
+    <p class="bf-perks">
+      <span>25% הנחה על גוף התאורה הראשון</span>
+      <span>30% הנחה על כל גוף נוסף · משלוח חינם</span>
+    </p>
+    <p class="bf-p">בחרו את הגוף שלכם.<br>את פתיחת המבצע כבר לא תצטרכו לזכור.</p>
+    <button type="button" class="bf-btn" data-bf-scroll="#models">לבחירת גוף התאורה שלי</button>
+    <div class="bf-sub">
+      <p class="bf-lead">השאירו מייל וקבלו קישור לרכישה ברגע שהמבצע נפתח.</p>
+      <form data-bf-form="collection banner" novalidate>
+        <div class="bf-row">
+          <label class="bf-sr" for="bf-mail">כתובת המייל</label>
+          <input class="bf-input" id="bf-mail" type="email" inputmode="email" autocomplete="email" placeholder="כתובת המייל">
+          <button type="submit" class="bf-btn">תזכירו לי כשהמבצע נפתח</button>
+        </div>
+        <div class="bf-consent">
+          <input type="checkbox" id="bf-ok">
+          <label for="bf-ok">אני מאשר/ת קבלת תזכורת במייל על המבצע · <a href="privacy.html">מדיניות הפרטיות</a></label>
+        </div>
+      </form>
+      <p class="bf-msg" data-bf-msg role="status" hidden></p>
+      <p class="bf-note">ההרשמה היא לתזכורת על המבצע בלבד ולא לרשימת דיוור. הגופים מיוצרים לפי הזמנה; ההרשמה אינה הזמנה.</p>
+    </div>
+  </div>
+  <div class="bf-filters" data-bf-filters role="group" aria-label="סינון לפי סוג גוף תאורה">
+    <button type="button" class="bf-chip" data-bf-filter="all" aria-pressed="true">הכול</button>
+    <button type="button" class="bf-chip" data-bf-filter="table" aria-pressed="false">שולחן</button>
+    <button type="button" class="bf-chip" data-bf-filter="pendant" aria-pressed="false">תלייה</button>
+    <button type="button" class="bf-chip" data-bf-filter="wall" aria-pressed="false">קיר</button>
+    <button type="button" class="bf-chip" data-bf-filter="ceiling" aria-pressed="false">תקרה</button>
+  </div>
+  <p class="bf-count" data-bf-count role="status"></p>
+</section>
+
+<div class="grid-products" id="models">
+      <a class="card" data-bf-type="table" href="product-holo.html">
         <div class="card__media">
           <img src="assets/img/177757_146abf6909e443c8a0be70ec5702cd00.jpg" alt="Holo — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_db7fbcf53a6046119dcebb33ac4b3669.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Holo</div>
         <div class="card__price">₪800</div>
       </a>
-      <a class="card" href="product-ilo.html">
+      <a class="card" data-bf-type="table" href="product-ilo.html">
         <div class="card__media">
           <img src="assets/img/177757_a2d1bf35c75d49b786be20aefa484510.jpg" alt="ilo — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_3b3d1e17aa1b4f0dab9f08c4921e3b82.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">ilo</div>
         <div class="card__price">₪700</div>
       </a>
-      <a class="card" href="product-redel.html">
+      <a class="card" data-bf-type="table" href="product-redel.html">
         <div class="card__media">
           <img src="assets/img/177757_d634231763124c0ca1b9f9ca850119a0.jpg" alt="Redel — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_d455b6fa00f34c4c9e159be046d1b386.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Redel</div>
         <div class="card__price">₪900</div>
       </a>
-      <a class="card" href="product-qibo.html">
+      <a class="card" data-bf-type="table" href="product-qibo.html">
         <div class="card__media">
           <img src="assets/img/177757_fbf8bb1ed13b4d9db8b86c8accc06314.jpg" alt="Qibo — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_0501f07a5b7841f4be83797ae8dfa39e.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Qibo</div>
         <div class="card__price">₪950</div>
       </a>
-      <a class="card" href="product-set.html">
+      <a class="card" data-bf-type="pendant" href="product-set.html">
         <div class="card__media">
           <img src="assets/img/177757_1bf9f50b4e7c4bc8a70c651b64fba593.jpg" alt="Set — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_9ca70ab9b79446bc932ad2e77584bd90.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Set</div>
         <div class="card__price">₪1,350</div>
       </a>
-      <a class="card" href="product-odd.html">
+      <a class="card" data-bf-type="pendant" href="product-odd.html">
         <div class="card__media">
           <img src="assets/img/177757_8f2b36f360ce4fa0abd96aa516981f3e.jpg" alt="Odd — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_eb3300f976ef4192a6618224be7eab7e.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Odd</div>
         <div class="card__price">₪950</div>
       </a>
-      <a class="card" href="product-opo.html">
+      <a class="card" data-bf-type="wall" href="product-opo.html">
         <div class="card__media">
           <img src="assets/img/177757_c7b6998ecbf8463daffc42bd8d1b8846.jpg" alt="Opo — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_2858288634c14c08b91b98748febde4b.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Opo</div>
         <div class="card__price">₪900</div>
       </a>
-      <a class="card" href="product-opi.html">
+      <a class="card" data-bf-type="wall" href="product-opi.html">
         <div class="card__media">
           <img src="assets/img/177757_cecb6b911b7f44be874dc850f2756866.jpg" alt="Opi — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_1244d38fac8e47feadceb49e92909744.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Opi</div>
         <div class="card__price">₪850</div>
       </a>
-      <a class="card" href="product-ule.html">
+      <a class="card" data-bf-type="ceiling" href="product-ule.html">
         <div class="card__media">
           <img src="assets/img/177757_e38d0f5c39e3457a917a69b1317d8dcc.jpg" alt="Ule — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_1e644e783ce74d7a8c009e4940337c44.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Ule</div>
         <div class="card__price">₪950</div>
       </a>
-      <a class="card" href="product-loe.html">
+      <a class="card" data-bf-type="ceiling" href="product-loe.html">
         <div class="card__media">
           <img src="assets/img/177757_d43a9c714e864442bcf9e8151f4ccb47.jpg" alt="Loe — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_f5e0495fd6954bf2b443e59ca0b65d3f.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Loe</div>
         <div class="card__price">₪900</div>
       </a>
-      <a class="card" href="product-ved.html">
+      <a class="card" data-bf-type="pendant" href="product-ved.html">
         <div class="card__media">
           <img src="assets/img/177757_59c6c9a2e8c148779e94d47d0e948d7c.jpg" alt="Ved — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_9a7590c9515b4a3b93a91ce2f57e8a82.jpg" alt="" loading="lazy">
         </div>
         <div class="card__name">Ved</div>
         <div class="card__price">₪750</div>
       </a>
-      <a class="card" href="product-opeq.html">
+      <a class="card" data-bf-type="pendant" href="product-opeq.html">
         <div class="card__media">
           <img src="assets/img/177757_60d23ea1a2ef43bbaef6cd381697c685.jpg" alt="Opeq — גוף תאורה מבטון" loading="lazy"><img src="assets/img/177757_8c0b6359bdce4116929fee2a3bbb75c0.jpg" alt="" loading="lazy">
         </div>

@@ -23,6 +23,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;700&family=Assistant:wght@200;300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v55">
+  <link rel="stylesheet" href="assets/css/blackfriday.css?v1">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Qibo", "sku": "ATD-QI-120", "description": "מנורת Qibo מקרינה אור גם קדימה וגם אחורה. היא מעוצבת ליצירת איזון רך בין תאורה ישירה לבין אור מוחזר. הזוהר החמים והעדין שלה מוסיף עומק ותחושת נוחות בחלל. צורתה הקומפקטית מתאימה במיוחד לשולחנות עבודה, מדפים או שולחנות צד. המנורה יוצרת אווירה רגועה וחמימה באמצעות אפקט תאורה דו-כיווני וייחודי.", "image": ["assets/img/177757_fbf8bb1ed13b4d9db8b86c8accc06314.jpg", "assets/img/177757_d653d8c9750445db905c56d1749101d2.jpg", "assets/img/177757_d5fe7dd8d1214982af3dee1a6b30c7ae.jpg", "assets/img/177757_5d43c88297834628bca1e1afc4a34e55.jpg", "assets/img/177757_4e4c6ddb068243b392e149f2eeba81c8.jpg"], "brand": {"@type": "Brand", "name": "a-tod"}, "offers": {"@type": "Offer", "price": 950, "priceCurrency": "ILS", "availability": "https://schema.org/OutOfStock"}}</script>
 <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 </head>
@@ -95,7 +96,25 @@
         </button>
       </div>
 
-      <div class="pdp__meta">
+      
+<div class="bf bf-pdp">
+  <h2 class="bf-h2">זה הגוף שבחרתם?</h2>
+  <p class="bf-lead">קבלו תזכורת עם קישור ישיר לדגם כשהמבצע נפתח.</p>
+  <form data-bf-form="product page" data-model-id="qibo" data-model-name="Qibo" data-model-url="https://studioatod.com/product-qibo.html" novalidate>
+    <div class="bf-row">
+      <label class="bf-sr" for="bf-pmail">כתובת המייל</label>
+      <input class="bf-input" id="bf-pmail" type="email" inputmode="email" autocomplete="email" placeholder="כתובת המייל">
+      <button type="submit" class="bf-btn">תזכירו לי על הדגם הזה</button>
+    </div>
+    <div class="bf-consent">
+      <input type="checkbox" id="bf-pok">
+      <label for="bf-pok">אני מאשר/ת קבלת תזכורת במייל על המבצע · <a href="privacy.html">מדיניות הפרטיות</a></label>
+    </div>
+  </form>
+  <p class="bf-msg" data-bf-msg role="status" hidden></p>
+</div>
+
+<div class="pdp__meta">
         <span>משלוח חינם משני פריטים</span>
       </div>
     </div>
