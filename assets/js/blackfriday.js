@@ -177,8 +177,29 @@
     });
   }
 
+  /* ---------- הבאנר מתכווץ תוך כדי גלילה ----------
+     --bf-p נע מ-0 (באנר מלא) ל-1 (פס דק) לאורך RANGE פיקסלים ראשונים.
+     ה-CSS גוזר ממנו את הריפוד, גודל הכותרת ושקיפות הטקסט.          */
+  function wireShrink(){
+    const hero = document.querySelector('.bf-hero');
+    if(!hero) return;
+    const RANGE = 220;
+    let queued = 0;
+    function update(){
+      queued = 0;
+      const p = Math.min(1, Math.max(0, window.scrollY / RANGE));
+      hero.style.setProperty('--bf-p', p.toFixed(3));
+    }
+    window.addEventListener('scroll', () => {
+      if(!queued) queued = requestAnimationFrame(update);
+    }, {passive:true});
+    window.addEventListener('resize', update, {passive:true});
+    update();
+  }
+
   /* ---------- הפעלה ---------- */
   function init(){
+    wireShrink();
     wireFilters();
     wireScroll();
     document.querySelectorAll('form[data-bf-form]').forEach(wireForm);
