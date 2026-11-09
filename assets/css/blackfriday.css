@@ -227,6 +227,11 @@
   display:block;
   width:100%;
   box-sizing:border-box;
+  /* נדבק מתחת להדר הדביק של האתר. --header-h מוגדר בגיליון הראשי
+     ומתעדכן לבד במובייל, כך שהפס תמיד יושב בדיוק מתחתיו.            */
+  position:sticky;
+  top:var(--header-h, 0px);
+  z-index:90;
   background:var(--bf-btn);
   color:#fff;
   border:0;
@@ -244,16 +249,17 @@
   margin:0;
   font-size:14px; line-height:1.6;
   color:rgba(255,255,255,.88);
-  text-wrap:balance;
 }
 @media (max-width:620px){
-  .bf-strip{padding:12px 14px; margin-bottom:20px}
-  .bf-strip__h{font-size:14.5px}
-  .bf-strip__p{font-size:13.5px}
+  /* ריפוד צדדי מינימלי: הטקסט מנצל כמעט את כל רוחב המסך
+     במקום להידחס לעמודה צרה באמצע.                              */
+  .bf-strip{padding:12px 8px; margin-bottom:20px}
+  .bf-strip__h{font-size:14.5px; margin-bottom:5px}
+  .bf-strip__p{font-size:13px; line-height:1.65}
 }
 /* במסך רחב הפס עצמו רחב, ולכן הטקסט צריך לגדול איתו */
 @media (min-width:900px){
   .bf-strip{padding:20px 24px; margin-bottom:30px}
   .bf-strip__h{font-size:21px; margin-bottom:5px}
-  .bf-strip__p{font-size:17px}
+  .bf-strip__p{font-size:17px; text-wrap:balance}
 }
