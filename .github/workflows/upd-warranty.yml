@@ -1,0 +1,67 @@
+name: upd-warranty
+on:
+  push:
+    branches: [warranty-14days]
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: apply
+        run: |
+          python3 - <<'PYEOF'
+          import pathlib, sys
+
+          NEW = "גופי התאורה של A-Tod מגיעים עם אחריות לחצי שנה על סדקים."
+          OLD = "האחריות לטיב המוצרים חלה על היצרן על פי תנאי תעודת האחריות המצורפת למוצר."
+          PRODUCTS = ["holo","ilo","loe","odd","opeq","opi","opo","qibo","redel","set","ule","ved"]
+
+          errors = []
+
+          def edit(path, old, new, count=1):
+              p = pathlib.Path(path)
+              t = p.read_text(encoding="utf-8")
+              n = t.count(old)
+              if n != count:
+                  errors.append(path + ": expected " + str(count) + ", found " + str(n) + " :: " + old[:60])
+                  return
+              p.write_text(t.replace(old, new), encoding="utf-8")
+
+          # B. delivery time 10 -> 14
+          for f in ["shipping-returns.html","contact.html","thank-you.html"] + ["product-%s.html" % p for p in PRODUCTS]:
+              edit(f, "10 ימי עסקים", "14 ימי עסקים")
+          edit("index.html", "עד 10 ימי עבודה לפריטים בעבודת יד", "עד 14 ימי עסקים לפריטים בעבודת יד")
+
+          # A1. terms.html section 6
+          edit("terms.html", OLD, NEW)
+
+          # A2. shipping-returns.html new section before defective product
+          edit("shipping-returns.html", "<h2>מוצר פגום</h2>",
+               "<h2>אחריות</h2>\n      <p>" + NEW + "</p>\n      <h2>מוצר פגום</h2>")
+
+          # A3. product pages - row in the delivery block
+          ROW = '<div class="drow"><span>משני פריטים</span><span>חינם</span></div>'
+          for p in PRODUCTS:
+              edit("product-%s.html" % p, ROW,
+                   ROW + '\n        <div class="drow"><span>אחריות</span><span>חצי שנה על סדקים</span></div>')
+
+          # C. last-updated on the two policy pages that actually changed
+          for f in ["terms.html","shipping-returns.html"]:
+              edit(f, "עודכן לאחרונה: 19.8.2026", "עודכן לאחרונה: 10.11.2026")
+
+          if errors:
+              print("FAILED")
+              for e in errors:
+                  print(" - " + e)
+              sys.exit(1)
+          print("OK")
+          PYEOF
+      - name: commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "warranty: six months on cracks; delivery up to 14 business days"
+          git push
