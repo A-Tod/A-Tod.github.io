@@ -479,7 +479,7 @@ window.atodPrice = function (cart) {
 (function () {
   const GA      = 'G-6R01MNSJWQ'; // Google Analytics 4  (Measurement ID · נכס studioatod, חשבון A-tod)
   const CLARITY = 'REPLACE';       // Microsoft Clarity   (Project ID)
-  const META    = '2179975309541757'; // Meta Pixel (Dataset "A-Tod Website" · עסק a___tod)
+  const META    = '1894580128586984'; // Meta Pixel (Dataset "A-Tod Website" · עסק a___tod)
 
   const has = v => v && !/REPLACE/.test(v);
   const ON0 = has(GA) || has(CLARITY) || has(META);
