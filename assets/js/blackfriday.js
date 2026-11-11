@@ -113,6 +113,15 @@
           modelUrl : modelUrl
         });
         // אישור רק אחרי שמירה בפועל.
+        // מדידה: אירוע Lead אחד לכל דפדפן, גם אם נרשמו לכמה דגמים.
+        // נשלח רק כאן, אחרי תשובה חיובית מה-webhook.
+        try{
+          if(!localStorage.getItem('atod_bf_lead')){
+            localStorage.setItem('atod_bf_lead', new Date().toISOString());
+            window.atodTrack && window.atodTrack('bf_signup',
+              { method: source, item_id: modelId || undefined, item_name: 'Black Friday 2026' });
+          }
+        }catch(_){}
         form.hidden = true;
         show('ok', modelName ? MSG.okModel(modelName) : MSG.okGeneral);
         msg.setAttribute('tabindex','-1');

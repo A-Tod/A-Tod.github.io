@@ -485,7 +485,7 @@ window.atodPrice = function (cart) {
   const ON0 = has(GA) || has(CLARITY) || has(META);
 
   /* שמות האירועים של GA4 ← השמות הסטנדרטיים של מטא */
-  const FB = { contact_whatsapp: 'Contact', view_item: 'ViewContent', add_to_cart: 'AddToCart',
+  const FB = { bf_signup: 'Lead', contact_whatsapp: 'Contact', view_item: 'ViewContent', add_to_cart: 'AddToCart',
                begin_checkout: 'InitiateCheckout', purchase: 'Purchase' };
 
   const KEY = 'atod_consent_v1';
