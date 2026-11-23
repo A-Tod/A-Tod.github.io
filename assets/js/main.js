@@ -8,7 +8,7 @@
 window.atodSale = (() => {
   const SALE = {
     early: Date.parse('2026-11-24T20:00:00+02:00'),
-    start: Date.parse('2026-11-26T08:00:00+02:00'),
+    start: Date.parse('2026-11-24T00:00:00+02:00'),
     end:   Date.parse('2026-11-30T23:59:59+02:00'),
     first: 0.25, rest: 0.30,
     label: 'הנחת בלאק פריידי',
