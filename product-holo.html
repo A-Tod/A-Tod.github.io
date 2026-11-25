@@ -26,6 +26,18 @@
   <link rel="stylesheet" href="assets/css/blackfriday.css?v7">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Holo", "sku": "ATD-HO-187", "description": "מנורת Holo מפיצה אור מלא ב-360 מעלות, ומעניקה הארה רכה ומאוזנת לכל הכיוונים. האור החמים והנעים שלה מושלם לחללים שמיועדים לרגיעה ולהרפיה. הצורה והגודל המדויקים שלה הופכים אותה לאידיאלית לשולחנות עבודה, מדפים ומזנונים. המנורה מוסיפה אווירה שלווה ונעימה לכל חדר שבו היא נמצאת.", "image": ["assets/img/177757_146abf6909e443c8a0be70ec5702cd00.jpg", "assets/img/177757_f03a303db3bb465ab018533ce6018c9a.jpg", "assets/img/177757_5d5381975ed447ec8ba70a65a793050f.jpg", "assets/img/177757_a844bac1b74943dfba717a8ee7a2e8a6.jpg", "assets/img/177757_354dc0e4d98943919682a52fdf119ff0.jpg"], "brand": {"@type": "Brand", "name": "a-tod"}, "offers": {"@type": "Offer", "price": 800, "priceCurrency": "ILS", "availability": "https://schema.org/InStock"}}</script>
 <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+.pdp__track{display:flex;flex-direction:column;gap:2px}
+.pdp__galfoot{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:12px;font-family:var(--f-he);font-weight:200;font-size:15px}
+.pdp__swipe{display:none;opacity:.6}
+.pdp__3d{text-decoration:underline;text-underline-offset:4px}
+@media (max-width:960px){
+.pdp__track{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:0}
+.pdp__track>*{flex:0 0 100%;scroll-snap-align:start}
+.pdp__swipe{display:inline}
+.pdp__galfoot{padding-inline:var(--gutter);padding-top:10px}
+}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">דילוג לתוכן הראשי</a>
@@ -121,6 +133,7 @@
     </div>
 
     <div class="pdp__gal">
+    <div class="pdp__track">
       <div class="pdp__stage">
         <img data-stage src="assets/img/177757_146abf6909e443c8a0be70ec5702cd00.jpg" width="1098" height="1433"
              alt="Holo — גוף תאורה מבטון" fetchpriority="high">
@@ -141,6 +154,8 @@
       <img class="pdp__shot" src="assets/img/177757_a844bac1b74943dfba717a8ee7a2e8a6.jpg" alt="Holo — תצוגה 4" loading="lazy">
       <img class="pdp__shot" src="assets/img/177757_354dc0e4d98943919682a52fdf119ff0.jpg" alt="Holo — תצוגה 5" loading="lazy">
     </div>
+    <div class="pdp__galfoot"><span class="pdp__swipe">החליקו לתמונות נוספות</span><a class="pdp__3d" href="#m3d">ראו איך הגוף נראה בחלל שלכם ‹</a></div>
+  </div>
   </div>
 
   <div class="detail">
@@ -172,7 +187,7 @@
   </div>
 
 
-  <div class="m3d">
+  <div class="m3d" id="m3d">
     <div class="wrap m3d__grid">
       <div class="m3d__side">
         <div class="m3d__eyebrow">מודל תלת־מימד</div>
