@@ -1,0 +1,52 @@
+name: seo-titles
+on:
+  push:
+    branches: [seo-titles]
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: titles
+        run: |
+          python3 - <<'PYEOF'
+          import pathlib, sys
+          T = {
+              "holo": ("Holo", "מנורת שולחן מבטון — Holo"),
+              "ilo": ("ilo", "מנורת שולחן לשידה מבטון — ilo"),
+              "qibo": ("Qibo", "מנורת שולחן עבודה מבטון — Qibo"),
+              "redel": ("Redel", "מנורת שולחן לקריאה מבטון — Redel"),
+              "set": ("Set", "מנורת תלייה לסלון ולמזנון מבטון — Set"),
+              "odd": ("Odd", "מנורת תלייה לפינת אוכל מבטון — Odd"),
+              "opeq": ("Opeq", "מנורת תלייה לחדר שינה מבטון — Opeq"),
+              "ved": ("Ved", "מנורת תלייה לצד המיטה מבטון — Ved"),
+              "opi": ("Opi", "מנורת קיר לכניסה ולמסדרון מבטון — Opi"),
+              "opo": ("Opo", "מנורת קיר מעוצבת מבטון — Opo"),
+              "loe": ("Loe", "גוף תאורה צמוד תקרה מבטון — Loe"),
+              "ule": ("Ule", "מנורת תקרה מבטון לסלון ולמסדרון — Ule"),
+          }
+          errors = []
+          for slug, (old, new) in T.items():
+              p = pathlib.Path('product-%s.html' % slug)
+              t = p.read_text(encoding='utf-8')
+              ot = '<title>%s | a-tod</title>' % old
+              nt = '<title>%s | a-tod</title>' % new
+              og = '<meta property="og:title" content="%s | a-tod">' % old
+              ng = '<meta property="og:title" content="%s | a-tod">' % new
+              if t.count(ot) != 1 or t.count(og) != 1:
+                  errors.append(slug + ' title=' + str(t.count(ot)) + ' og=' + str(t.count(og)))
+                  continue
+              p.write_text(t.replace(ot, nt).replace(og, ng), encoding='utf-8')
+          if errors:
+              print('FAILED', errors); sys.exit(1)
+          print('OK')
+          PYEOF
+      - name: commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "seo: descriptive titles on the product pages"
+          git push
