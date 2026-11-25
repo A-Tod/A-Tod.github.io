@@ -1,0 +1,43 @@
+name: bf-bump5
+on:
+  push:
+    branches: [A-Tod-patch-3]
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: add business number
+        run: |
+          python3 - <<'PYEOF'
+          import pathlib, sys
+          OLD = '<span>© 2026 a-tod · כל הזכויות שמורות</span>'
+          NEW = '<span>© 2026 a-tod · ח.פ 203039961 · כל הזכויות שמורות</span>'
+          files = 0
+          for p in sorted(pathlib.Path('.').glob('*.html')):
+              t = p.read_text(encoding='utf-8')
+              if OLD in t:
+                  p.write_text(t.replace(OLD, NEW), encoding='utf-8')
+                  files += 1
+          print('colophon files:', files)
+          if files < 25:
+              print('FAILED colophon', files); sys.exit(1)
+
+          tp = pathlib.Path('terms.html')
+          t = tp.read_text(encoding='utf-8')
+          TO = 'האתר מופעל על ידי A-Tod (להלן: "הנהלת האתר")'
+          TN = 'האתר מופעל על ידי A-Tod, ח.פ 203039961, ביאליק 63 רמת גן (להלן: "הנהלת האתר")'
+          if t.count(TO) != 1:
+              print('FAILED terms', t.count(TO)); sys.exit(1)
+          tp.write_text(t.replace(TO, TN), encoding='utf-8')
+          print('OK')
+          PYEOF
+      - name: commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "add the business number to the footer and terms"
+          git push
