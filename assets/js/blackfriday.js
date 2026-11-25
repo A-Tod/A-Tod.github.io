@@ -197,11 +197,12 @@
        אם הוא מתכווץ מהר יותר מקצב הגלילה, הדפדפן מושך את הגלילה אחורה
        והבאנר "נתקע". לכן טווח הגלילה חייב להיות גדול מהפרש הגבהים —
        מודדים אותו בפועל ומכפילים, במקום לנחש מספר קבוע.              */
-    let range = 220;
+    let range = 220, full = 0;
     function measure(){
       const before = hero.style.getPropertyValue('--bf-p');
+      hero.style.marginBlockEnd = '0px';
       hero.style.setProperty('--bf-p', '0');
-      const full = hero.getBoundingClientRect().height;
+      full = hero.getBoundingClientRect().height;
       hero.style.setProperty('--bf-p', '1');
       const min = hero.getBoundingClientRect().height;
       hero.style.setProperty('--bf-p', before || '0');
@@ -213,6 +214,14 @@
       queued = 0;
       const p = Math.min(1, Math.max(0, window.scrollY / range));
       hero.style.setProperty('--bf-p', p.toFixed(3));
+      /* הבאנר מתכווץ, ולכן גובה המסמך מתקצר תוך כדי גלילה, והדפדפן
+         מתקן את מיקום הגלילה בכל פריים. זה מה שנראה כריצוד: גלילה של 20
+         פיקסל הזיזה את העמוד 12 בלבד. לכן מה שהבאנר מאבד בגובה הוא
+         מקבל חזרה כשוליים תחתונים, וגובה המסמך נשאר קבוע.
+         הגובה נמדד ולא מחושב מ-p, כי max-height של המשפט נכנס לתוקף
+         רק בחלק מהטווח, ולכן הקשר בין הגובה ל-p אינו ליניארי.      */
+      hero.style.marginBlockEnd =
+        Math.max(0, full - hero.getBoundingClientRect().height).toFixed(2) + 'px';
     }
     function remeasure(){ measure(); update(); }
 
