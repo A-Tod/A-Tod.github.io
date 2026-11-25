@@ -234,9 +234,39 @@
     if(document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
   }
 
+  /* ---------- המבצע פתוח: התאמת העמוד ----------
+     כל עוד המבצע רץ אין טעם לבקש מייל לתזכורת על מבצע שכבר נפתח,
+     ואין טעם להציג הטבת 10% שמתחרה בו. שתי ההתאמות נגזרות ממצב
+     המבצע ולא מתאריך, ולכן הן מתבטלות מעצמן כשהמבצע נסגר.   */
+  function wireLiveSale(){
+    const sale = window.atodSale;
+    if(!sale || !sale.on) return;
+
+    // הטבת ה-10% שבפוטר לא מתחרה בהטבות המבצע
+    const news = document.querySelector('#news-form');
+    const newsBlock = news && news.closest('div');
+    if(newsBlock) newsBlock.hidden = true;
+
+    // בלוק התזכורת בדף המוצר מציג את ההטבה עצמה במקום לבקש מייל
+    const pdp = document.querySelector('.bf-pdp');
+    if(!pdp) return;
+    const h    = pdp.querySelector('.bf-h2');
+    const lead = pdp.querySelector('.bf-lead');
+    const form = pdp.querySelector('form');
+    const note = pdp.querySelector('.bf-note');
+    if(h)    h.textContent = 'בלאק פריידי — המבצע פתוח';
+    if(lead) lead.textContent =
+      '25% על גוף התאורה הראשון, 30% על כל גוף נוסף, ומשלוח חינם. ' +
+      'ההנחה מחושבת אוטומטית בהזמנה, בלי קוד קופון.';
+    if(form) form.hidden = true;
+    if(note) note.textContent =
+      'המבצע מסתיים ב-30.11 בחצות. הגופים מיוצרים לפי הזמנה, אספקה עד 14 ימי עסקים.';
+  }
+
   /* ---------- הפעלה ---------- */
   function init(){
     wireShrink();
+    wireLiveSale();
     wireFilters();
     wireScroll();
     document.querySelectorAll('form[data-bf-form]').forEach(wireForm);
