@@ -1,0 +1,18 @@
+name: build-pdp-gallery
+on:
+  push:
+    branches: [content/pdp-gallery]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/pdpgal.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add product-holo.html
+          git commit -m "pdp: horizontal gallery on mobile and 3d link (holo)"
+          git push
