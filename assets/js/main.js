@@ -1033,8 +1033,8 @@ html{-webkit-tap-highlight-color:transparent}
 
   const cta  = document.querySelector('.pdp__cta[data-add]');
   const meta = document.querySelector('.pdp__meta');
-  if (cta && meta) meta.after(link('שאלה לפני שמזמינים? כתבו לי בוואטסאפ',
-    'היי, יש לי שאלה על ' + cta.dataset.name));
+  if (cta && meta) meta.after(link('רוצים לדעת יותר? כתבו לי בוואטסאפ',
+    'היי, יש לי שאלה על ' + cta.dataset.name + ' — התאמה לחלל, מידות או התקנה'));
 
   const send = document.getElementById('c-submit');
   if (send) send.after(link('שאלה לפני התשלום? כתבו לי בוואטסאפ',

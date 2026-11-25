@@ -197,11 +197,12 @@
        אם הוא מתכווץ מהר יותר מקצב הגלילה, הדפדפן מושך את הגלילה אחורה
        והבאנר "נתקע". לכן טווח הגלילה חייב להיות גדול מהפרש הגבהים —
        מודדים אותו בפועל ומכפילים, במקום לנחש מספר קבוע.              */
-    let range = 220;
+    let range = 220, full = 0;
     function measure(){
       const before = hero.style.getPropertyValue('--bf-p');
+      hero.style.marginBlockEnd = '0px';
       hero.style.setProperty('--bf-p', '0');
-      const full = hero.getBoundingClientRect().height;
+      full = hero.getBoundingClientRect().height;
       hero.style.setProperty('--bf-p', '1');
       const min = hero.getBoundingClientRect().height;
       hero.style.setProperty('--bf-p', before || '0');
@@ -213,6 +214,14 @@
       queued = 0;
       const p = Math.min(1, Math.max(0, window.scrollY / range));
       hero.style.setProperty('--bf-p', p.toFixed(3));
+      /* הבאנר מתכווץ, ולכן גובה המסמך מתקצר תוך כדי גלילה, והדפדפן
+         מתקן את מיקום הגלילה בכל פריים. זה מה שנראה כריצוד: גלילה של 20
+         פיקסל הזיזה את העמוד 12 בלבד. לכן מה שהבאנר מאבד בגובה הוא
+         מקבל חזרה כשוליים תחתונים, וגובה המסמך נשאר קבוע.
+         הגובה נמדד ולא מחושב מ-p, כי max-height של המשפט נכנס לתוקף
+         רק בחלק מהטווח, ולכן הקשר בין הגובה ל-p אינו ליניארי.      */
+      hero.style.marginBlockEnd =
+        Math.max(0, full - hero.getBoundingClientRect().height).toFixed(2) + 'px';
     }
     function remeasure(){ measure(); update(); }
 
@@ -225,9 +234,39 @@
     if(document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
   }
 
+  /* ---------- המבצע פתוח: התאמת העמוד ----------
+     כל עוד המבצע רץ אין טעם לבקש מייל לתזכורת על מבצע שכבר נפתח,
+     ואין טעם להציג הטבת 10% שמתחרה בו. שתי ההתאמות נגזרות ממצב
+     המבצע ולא מתאריך, ולכן הן מתבטלות מעצמן כשהמבצע נסגר.   */
+  function wireLiveSale(){
+    const sale = window.atodSale;
+    if(!sale || !sale.on) return;
+
+    // הטבת ה-10% שבפוטר לא מתחרה בהטבות המבצע
+    const news = document.querySelector('#news-form');
+    const newsBlock = news && news.closest('div');
+    if(newsBlock) newsBlock.hidden = true;
+
+    // בלוק התזכורת בדף המוצר מציג את ההטבה עצמה במקום לבקש מייל
+    const pdp = document.querySelector('.bf-pdp');
+    if(!pdp) return;
+    const h    = pdp.querySelector('.bf-h2');
+    const lead = pdp.querySelector('.bf-lead');
+    const form = pdp.querySelector('form');
+    const note = pdp.querySelector('.bf-note');
+    if(h)    h.textContent = 'בלאק פריידי — המבצע פתוח';
+    if(lead) lead.textContent =
+      '25% על גוף התאורה הראשון, 30% על כל גוף נוסף, ומשלוח חינם. ' +
+      'ההנחה מחושבת אוטומטית בהזמנה, בלי קוד קופון.';
+    if(form) form.hidden = true;
+    if(note) note.textContent =
+      'המבצע מסתיים ב-30.11 בחצות. הגופים מיוצרים לפי הזמנה, אספקה עד 14 ימי עסקים.';
+  }
+
   /* ---------- הפעלה ---------- */
   function init(){
     wireShrink();
+    wireLiveSale();
     wireFilters();
     wireScroll();
     document.querySelectorAll('form[data-bf-form]').forEach(wireForm);

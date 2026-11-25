@@ -105,6 +105,8 @@
    סדר המוקאפ: שדה → הסכמה → כפתור. ה-HTML עוטף את השדה והכפתור ב-.bf-row,
    ולכן .bf-row נעשה display:contents והילדים מסודרים ב-order.              */
 .bf form{display:flex; flex-direction:column}
+/* display:flex גובר על תכונת hidden, ולכן הסתרת הטופס מקוד לא עבדה */
+.bf form[hidden]{display:none}
 .bf-row{display:contents}
 .bf form .bf-input{order:1; margin:0 0 14px}
 .bf form .bf-consent{order:2}
@@ -257,9 +259,6 @@
   gap:clamp(14px,2.6vw,40px); direction:ltr; margin:0 auto; max-width:1100px;
   font:500 clamp(26px,6.6vw,96px)/1 'Jost',sans-serif; letter-spacing:.3em; color:#141414;
   font-size:calc(var(--bf-fs-full) + (var(--bf-fs-min) - var(--bf-fs-full)) * var(--bf-p));
-}
-.bf-hero__title::before,.bf-hero__title::after{
-  content:""; flex:1 1 0; min-width:12px; height:2px; background:currentColor; opacity:.75;
 }
 .bf-hero__title span{white-space:nowrap; margin-right:-.3em}
 .bf-hero__text{
