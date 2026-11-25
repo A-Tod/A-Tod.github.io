@@ -13,8 +13,8 @@ jobs:
         run: |
           python3 - <<'PYEOF'
           import pathlib, sys
-          OLD = "blackfriday.js?v3"
-          NEW = "blackfriday.js?v4"
+          OLD = "blackfriday.js?v4"
+          NEW = "blackfriday.js?v5"
           files = 0
           for p in sorted(pathlib.Path(".").glob("*.html")):
               t = p.read_text(encoding="utf-8")
