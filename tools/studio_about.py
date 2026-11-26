@@ -25,10 +25,13 @@ t = io.open(p, encoding='utf-8').read()
 old_img = f'<img src="{SKETCH}" alt="הדרך לכאן" loading="lazy">'
 assert old_img in t
 t = t.replace(old_img, f'<img src="{DST}" alt="רועי דנציגר, מייסד הסטודיו" loading="lazy">', 1)
-start = t.index('<section class="story wrap">\n<div class="legal">')
-end = t.index('</section>', start) + len('</section>\n')
-assert 'רגשי' in t[start:end]
-t = t[:start] + t[end:]
+import re
+m = None
+for cand in re.finditer(r'[ \t]*<section class="story wrap">\s*<div class="legal">.*?</section>[ \t]*\n?', t, re.S):
+    if 'רגשי' in cand.group(0):
+        m = cand
+assert m, 'emotional line section not found'
+t = t[:m.start()] + t[m.end():]
 io.open(p, 'w', encoding='utf-8').write(t)
 print('UPDATED', p)
 
