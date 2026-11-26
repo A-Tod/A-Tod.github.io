@@ -40,6 +40,15 @@
 .home-picks__grid{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:8px}
 .home-picks__grid>.card{flex:0 0 76%;scroll-snap-align:start;scroll-snap-stop:always}
 }
+.home-cats{padding-block:0 clamp(16px,3vw,32px)}
+.home-cats__h{font-family:var(--f-he);font-weight:200;font-size:clamp(24px,3vw,32px);line-height:1.4;text-align:center;margin-bottom:30px}
+.home-cats__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.home-cat{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;text-decoration:none}
+.home-cat img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.home-cat:hover img{transform:scale(1.03)}
+.home-cat::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.42),rgba(0,0,0,0) 45%);pointer-events:none}
+.home-cat__label{position:absolute;z-index:1;inset-inline-start:16px;bottom:14px;color:#fff;font-family:var(--f-he);font-weight:300;font-size:clamp(17px,1.6vw,20px);line-height:1.2}
+@media (max-width:760px){.home-cats__grid{grid-template-columns:repeat(2,1fr);gap:10px}.home-cat__label{inset-inline-start:12px;bottom:10px}}
 </style>
 </head>
 <body>
@@ -134,6 +143,16 @@
       </a>
   </div>
   <p class="home-picks__more"><a href="collection.html">לכל הדגמים</a></p>
+</section>
+
+<section class="wrap home-cats" aria-labelledby="home-cats-h">
+<h2 class="home-cats__h" id="home-cats-h">לפי סוג</h2>
+<div class="home-cats__grid">
+<a class="home-cat" href="category-table-lamps.html"><img src="assets/img/177757_db7fbcf53a6046119dcebb33ac4b3669.jpg" alt="" loading="lazy"><span class="home-cat__label">מנורות שולחן</span></a>
+<a class="home-cat" href="category-pendant-lamps.html"><img src="assets/img/177757_9a7590c9515b4a3b93a91ce2f57e8a82.jpg" alt="" loading="lazy"><span class="home-cat__label">מנורות תליה</span></a>
+<a class="home-cat" href="category-wall-lamps.html"><img src="assets/img/177757_2858288634c14c08b91b98748febde4b.jpg" alt="" loading="lazy"><span class="home-cat__label">מנורות קיר</span></a>
+<a class="home-cat" href="category-ceiling-lamps.html"><img src="assets/img/177757_1e644e783ce74d7a8c009e4940337c44.jpg" alt="" loading="lazy"><span class="home-cat__label">צמודי תקרה</span></a>
+</div>
 </section>
 
 <section class="features wrap" aria-label="מדורי האתר">
