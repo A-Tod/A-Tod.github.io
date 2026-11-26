@@ -26,6 +26,23 @@
   <link rel="stylesheet" href="assets/css/blackfriday.css?v7">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Opo", "sku": "ATD-OP-150", "description": "מנורת הקיר Opo מציעה פרשנות מודרנית ופיסולית לתאורה משלימה. בזכות המבנה הפתוח והייחודי שלה, היא מפיצה אור רך וממוקד כלפי מטה, מה שהופך אותה לפתרון מושלם ליצירת נקודות עניין עיצוביות או להארת מעברים וחללים קטנים. צורתה המעוגלת, המזכירה \"קשת\" גיאומטרית, משלבת בין חומר גולמי למראה רך ומזמין. ה-Opo משתלבת בהרמוניה בחללים מינימליסטיים ומוסיפה נגיעה של תחכום מאופק ונוכחות עיצובית בלתי נשכחת לכל קיר.", "image": ["assets/img/177757_c7b6998ecbf8463daffc42bd8d1b8846.jpg", "assets/img/177757_284e1ad24b2e44a6abdf4eb87ff0cda4.jpg", "assets/img/177757_e370e8e8d36941d593cd6a0e88e5b472.jpg"], "brand": {"@type": "Brand", "name": "a-tod"}, "offers": {"@type": "Offer", "price": 900, "priceCurrency": "ILS", "availability": "https://schema.org/InStock"}}</script>
 <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+.pdp__track{display:flex;flex-direction:column;gap:2px}
+.pdp__galfoot{padding-top:12px;font-family:var(--f-he);font-weight:200;font-size:15px}
+.pdp__3d{display:inline-block;text-decoration:underline;text-underline-offset:4px}
+.pdp__bar{display:none}
+@media (max-width:960px){
+.pdp__track{flex-direction:row;align-items:center;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pdp__track::-webkit-scrollbar{display:none}
+.pdp__track>*{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;aspect-ratio:2/3;overflow:hidden}
+.pdp__track>img.pdp__shot{width:100%;height:100%;object-fit:cover}
+.pdp__stage img{width:100%;height:100%;object-fit:cover}
+.pdp__galfoot{padding-top:0;text-align:center}
+.pdp__bar{display:block;position:relative;height:2px;background:rgba(46,37,31,.13)}
+.pdp__barfill{position:absolute;top:0;bottom:0;inset-inline-start:0;width:0;background:var(--ink)}
+.pdp__3d{margin-top:18px;padding-inline:var(--gutter)}
+}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">דילוג לתוכן הראשי</a>
@@ -120,6 +137,7 @@
     </div>
 
     <div class="pdp__gal">
+<div class="pdp__track">
       <div class="pdp__stage">
         <img data-stage src="assets/img/177757_c7b6998ecbf8463daffc42bd8d1b8846.jpg" width="1200" height="1800"
              alt="Opo — גוף תאורה מבטון" data-dim-src="assets/img/177757_c7b6998ecbf8463daffc42bd8d1b8846.jpg" data-hero-src="assets/img/177757_c7b6998ecbf8463daffc42bd8d1b8846.jpg" fetchpriority="high">
@@ -137,7 +155,9 @@
       </div>
       <img class="pdp__shot" src="assets/img/177757_284e1ad24b2e44a6abdf4eb87ff0cda4.jpg" alt="Opo — תצוגה 2" loading="lazy">
       <img class="pdp__shot" src="assets/img/177757_e370e8e8d36941d593cd6a0e88e5b472.jpg" alt="Opo — תצוגה 3" loading="lazy">
-    </div>
+</div>
+<div class="pdp__galfoot"><div class="pdp__bar" aria-hidden="true"><span class="pdp__barfill"></span></div><a class="pdp__3d" href="#m3d">ראו איך הגוף נראה בחלל שלכם ‹</a></div>
+</div>
   </div>
 
   <div class="detail">
@@ -169,7 +189,7 @@
   </div>
 
 
-  <div class="m3d">
+  <div class="m3d" id="m3d">
     <div class="wrap m3d__grid">
       <div class="m3d__side">
         <div class="m3d__eyebrow">מודל תלת־מימד</div>
@@ -316,5 +336,24 @@
 </div>
 <script src="assets/js/main.js?v60"></script>
   <script src="assets/js/blackfriday.js?v5"></script>
+<script>
+(function(){
+var tr=document.querySelector('.pdp__track'), fill=document.querySelector('.pdp__barfill');
+if(!tr||!fill) return;
+var n=tr.children.length;
+if(n<2) return;
+var raf=0;
+function upd(){
+raf=0;
+var max=tr.scrollWidth-tr.clientWidth;
+var p=max>1?Math.min(1,Math.abs(tr.scrollLeft)/max):0;
+fill.style.width=(((1+p*(n-1))/n)*100).toFixed(2)+'%';
+}
+function q(){ if(!raf) raf=window.requestAnimationFrame(upd); }
+tr.addEventListener('scroll',q,{passive:true});
+window.addEventListener('resize',q);
+upd();
+})();
+</script>
 </body>
 </html>
