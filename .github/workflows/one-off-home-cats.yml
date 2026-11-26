@@ -1,0 +1,25 @@
+name: one-off-home-cats
+on:
+  push:
+    branches: [content/home-categories]
+    paths: ['.github/workflows/one-off-home-cats.yml']
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add category shortcuts to the homepage
+        run: python3 tools/home_cats.py
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -- index.html
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "home: category shortcuts after the featured models"
+            git push
+          fi
