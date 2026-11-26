@@ -911,3 +911,13 @@ body[data-consent-open] .a11y{bottom:calc(16px + var(--consent-h,96px))}
 .wa-ask{display:block;margin-top:14px;font-size:13px;color:rgba(46,37,31,.68);
   text-decoration:underline;text-underline-offset:3px}
 .wa-ask:hover{color:rgba(46,37,31,1)}
+
+
+/* polish-2026-11-26 — ליטוש ממשק */
+a,button,summary,label,input,select,[role="button"]{touch-action:manipulation}
+h1,h2,h3,.hero__title,.pagehead h1,.home-picks__h{text-wrap:balance}
+.legal p,.pagehead p,.story__body p,.pdp__blurb{text-wrap:pretty}
+.card__price,.pdp__price,.drow span,.pdp__meta,.sum__row span{font-variant-numeric:tabular-nums}
+@media (max-width:760px){
+  .footer__list a,.footer__list button,.more,.home-picks__more a{display:inline-flex;align-items:center;min-height:40px}
+}
