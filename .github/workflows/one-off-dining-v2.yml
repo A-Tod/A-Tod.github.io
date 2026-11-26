@@ -1,0 +1,25 @@
+name: one-off-dining-v2
+on:
+  push:
+    branches: [content/dining-links-v2]
+    paths: ['.github/workflows/one-off-dining-v2.yml']
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add internal links to the dining-lamp guide
+        run: python3 tools/dining_v2.py
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -- '*.html'
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "seo: link the dining-lamp guide from pendant pages"
+            git push
+          fi
