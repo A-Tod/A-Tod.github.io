@@ -25,3 +25,4 @@ jobs:
             git commit -m "studio: four-stage process; about: founder portrait"
             git push
           fi
+# rerun after script fix
