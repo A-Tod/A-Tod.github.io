@@ -34,7 +34,9 @@
 @media (max-width:960px){
 .pdp__track{flex-direction:row;align-items:center;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .pdp__track::-webkit-scrollbar{display:none}
-.pdp__track>*{flex:0 0 100%;scroll-snap-align:start}
+.pdp__track>*{flex:0 0 100%;scroll-snap-align:start;aspect-ratio:2/3;overflow:hidden}
+.pdp__track>img.pdp__shot{width:100%;height:100%;object-fit:cover}
+.pdp__stage img{width:100%;height:100%;object-fit:cover}
 .pdp__galfoot{padding-top:0;text-align:center}
 .pdp__bar{display:block;position:relative;height:2px;background:rgba(46,37,31,.13)}
 .pdp__barfill{position:absolute;top:0;bottom:0;inset-inline-start:0;width:0;background:var(--ink)}
